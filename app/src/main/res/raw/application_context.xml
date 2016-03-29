@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <application-context>
     <!-- action 配置 -->
+    <!-- ${} 中的内容表示应用string.xml中的值 -->
     <action-config>
         <action id="${ids_action_user_login}" name="com.android.javier.demo.action.LoginAction">
             <notify id="${ids_notify_user_login}" name="execute_user_login"/>

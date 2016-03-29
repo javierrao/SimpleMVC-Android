@@ -12,5 +12,6 @@ public class BaseApplication extends SimpleApplication {
         super.onCreate();
 
         initSimpleMVC(R.raw.application_context);
+        initLogger("SimpleMVC", "SimpleMVC", "SimpleMVC", true);
     }
 }
