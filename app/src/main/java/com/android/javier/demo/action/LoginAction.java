@@ -28,7 +28,7 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
 
             // 执行登陆的task
             SimpleTask task = getTaskById(R.string.ids_task_user_login);
-            taskManager.executeTaskHttpPost(task, "https://192.168.0.111/login", "account=javierrao&password=javier24122", "");
+            taskManager.executeTaskHttpPost(task, "https://192.168.0.111/login", "account=javier&password=123456", "");
         }
     }
 
