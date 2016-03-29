@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- action 配置 -->
+    <string name="ids_action_user_login">user_login_action</string>
+
+    <!-- notify 配置 -->
+    <string name="ids_notify_user_login">user_login_notify</string>
+
+    <!-- task 配置 -->
+    <string name="ids_task_user_login">user_login_task</string>
+</resources>

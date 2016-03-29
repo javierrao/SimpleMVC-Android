@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application-context>
+    <!-- action 配置 -->
+    <action-config>
+        <action id="${ids_action_user_login}" name="com.android.javier.demo.action.LoginAction">
+            <notify id="${ids_notify_user_login}" name="execute_user_login"/>
+        </action>
+    </action-config>
+
+    <!-- 任务配置 -->
+    <task-config>
+        <task id="${ids_task_user_login}" name="com.android.javier.demo.tasks.LoginTask">
+            <type>http</type>
+            <meta-data>json</meta-data>
+        </task>
+    </task-config>
+</application-context>
