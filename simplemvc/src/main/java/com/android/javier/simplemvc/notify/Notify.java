@@ -3,20 +3,20 @@ package com.android.javier.simplemvc.notify;
 import com.android.javier.simplemvc.interfaces.INotify;
 
 /**
- * Created by javie on 2016/3/27.
+ * Created by javier on 2016/3/27.
  */
 public class Notify implements INotify {
-    private String id;
-    private int resId;
+    private int id;
     private String name;
     private Object body;
     private Class<?> type;
 
-    public String getId() {
+    @Override
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,14 +34,5 @@ public class Notify implements INotify {
 
     public void setBody(Object body) {
         this.body = body;
-    }
-
-    @Override
-    public int getResId() {
-        return resId;
-    }
-
-    public void setResId(int resId) {
-        this.resId = resId;
     }
 }

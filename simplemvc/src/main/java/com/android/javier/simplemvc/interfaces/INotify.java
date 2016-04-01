@@ -8,6 +8,5 @@ import com.android.javier.simplemvc.app.IApplicationWidget;
 public interface INotify {
     String getName();
     Object getBody();
-    int getResId();
-    String getId();
+    int getId();
 }

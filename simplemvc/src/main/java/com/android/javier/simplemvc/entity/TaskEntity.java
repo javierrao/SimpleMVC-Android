@@ -4,17 +4,16 @@ package com.android.javier.simplemvc.entity;
  * Created by javie on 2016/3/27.
  */
 public class TaskEntity {
-    private String id;
-    private int resId;
+    private int id;
     private String name;
     private String type;
     private String metaData;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -40,13 +39,5 @@ public class TaskEntity {
 
     public void setMetaData(String metaData) {
         this.metaData = metaData;
-    }
-
-    public int getResId() {
-        return resId;
-    }
-
-    public void setResId(int resId) {
-        this.resId = resId;
     }
 }

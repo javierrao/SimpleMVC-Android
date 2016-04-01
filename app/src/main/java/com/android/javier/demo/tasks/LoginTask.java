@@ -17,7 +17,6 @@ public class LoginTask extends SimpleNetworkTask<UserLoginEntity> {
     @Override
     protected UserLoginEntity onResponse(ResponseEntity responseEntity) {
 
-
         return null;
     }
 

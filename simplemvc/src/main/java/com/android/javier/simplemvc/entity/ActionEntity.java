@@ -8,16 +8,16 @@ import java.util.ArrayList;
  * Created by javie on 2016/3/27.
  */
 public class ActionEntity {
-    private String id;
+    private int id;
     private String name;
 
     private ArrayList<Notify> notifies;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

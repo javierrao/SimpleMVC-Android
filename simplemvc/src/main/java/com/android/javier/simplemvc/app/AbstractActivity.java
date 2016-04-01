@@ -27,15 +27,11 @@ public abstract class AbstractActivity extends Activity implements IApplicationW
         applicationContext = ApplicationContext.getApplicationContext(getApplicationContext());
     }
 
-    protected void sendNotification(String notifyId, Object body) {
-        applicationContext.sendNotify(notifyId, body, this);
-    }
-
-    protected void sendNotification(int notifyResId, Object body) {
+    protected void doActionNotify(int notifyResId, Object body) {
         applicationContext.sendNotify(notifyResId, body, this);
     }
 
-    protected void sendNotification(int notifyResId, String... body) {
+    protected void doActionNotify(int notifyResId, String... body) {
         applicationContext.sendNotify(notifyResId, body, this);
     }
 

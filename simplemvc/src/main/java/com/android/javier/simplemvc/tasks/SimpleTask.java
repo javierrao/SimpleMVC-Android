@@ -19,12 +19,8 @@ public abstract class SimpleTask extends AsyncTask {
         this.taskEntity = entity;
     }
 
-    public String getTid() {
+    public int getTid() {
         return taskEntity.getId();
-    }
-
-    public int getTaskResId() {
-        return taskEntity.getResId();
     }
 
     public String getMetaData() {

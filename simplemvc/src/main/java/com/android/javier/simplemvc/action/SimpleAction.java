@@ -43,16 +43,10 @@ public abstract class SimpleAction<T> implements IAction, IAsyncTaskCallback<T> 
         }
     }
 
-    protected SimpleTask getTaskById(String taskId) {
+    protected SimpleTask getTaskById(int taskId) {
         SimpleTask task = applicationContext.getTask(taskId);
         task.setCallback(this);
-
         return task;
-    }
-
-    protected SimpleTask getTaskById(int taskResId) {
-        String taskId = context.getString(taskResId);
-        return getTaskById(taskId);
     }
 
     @Override

@@ -21,14 +21,14 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
 
     @Override
     public void doAction(INotify notify) {
-        if (notify.getResId() == R.string.ids_notify_user_login) {
+        if (notify.getId() == R.id.ids_notify_user_login) {
             String[] body = (String[]) notify.getBody();
 
             Logger.getLogger().d("参数："+body[0] + " - " + body[1]);
 
             // 执行登陆的task
-            SimpleTask task = getTaskById(R.string.ids_task_user_login);
-            taskManager.executeTaskHttpPost(task, "https://192.168.0.111/login", "account=javier&password=123456", "");
+            SimpleTask task = getTaskById(R.id.ids_task_user_login);
+            taskManager.executeTaskHttpPost(task, "https://192.168.0.111/redpacket/user/login", "account=18129938032&password=abc123", "");
         }
     }
 

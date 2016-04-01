@@ -63,12 +63,12 @@ public final class ApplicationContext {
     }
 
     /**
-     * 根据消息名称发送消息
+     * 根据消息ID发送消息
      * @param notifyId    消息ID,对应配置在context.xml中的notify的id字段
      * @param body  消息体
      * @param target    消息的发起者
      */
-    public void sendNotify(String notifyId, Object body, IApplicationWidget target) {
+    public void sendNotify(int notifyId, Object body, IApplicationWidget target) {
         ActionEntity action = findActionByNotifyId(notifyId);
 
         if (action == null) {
@@ -91,28 +91,12 @@ public final class ApplicationContext {
     }
 
     /**
-     * 根据消息资源ID发送消息
-     * @param notifyResId  需要发送的消息引用的资源ID
-     * @param body      消息体
-     * @param target    消息的发起者
-     */
-    public void sendNotify(int notifyResId, Object body, IApplicationWidget target) {
-        String notifyId = context.getString(notifyResId);
-
-        sendNotify(notifyId, body, target);
-    }
-
-    /**
      * 根据taskID获取task
      * @param taskId    task id
      * @return
      */
-    public SimpleTask getTask(String taskId) {
-        return createTask(taskId, 0);
-    }
-
-    public SimpleTask getTask(int resId) {
-        return null;
+    public SimpleTask getTask(int taskId) {
+        return createTask(taskId);
     }
 
     /**
@@ -123,10 +107,14 @@ public final class ApplicationContext {
     }
 
 
-
-    private int getItemResourceValue(String str) {
+    /**
+     * 获取资源ID
+     * @param str
+     * @return
+     */
+    private int getItemResourceId(String str) {
         String tmpStr = str.substring(2, str.length() - 1);
-        int res = context.getResources().getIdentifier(tmpStr, "string", context.getPackageName());
+        int res = context.getResources().getIdentifier(context.getPackageName() + ":id/" + tmpStr, null, null);
 
         return res;
     }
@@ -161,17 +149,17 @@ public final class ApplicationContext {
     }
 
     /**
-     * 根据消息名称查询处理该消息的action
+     * 根据消息ID查询处理该消息的action
      * @param notifyId      消息ID
      * @return
      */
-    private ActionEntity findActionByNotifyId(String notifyId) {
+    private ActionEntity findActionByNotifyId(int notifyId) {
         for (int i = 0; i < actionlist.size(); i++) {
             ActionEntity actionEntity = actionlist.get(i);
             ArrayList<Notify> notifies = actionEntity.getNotifies();
 
             for (int j = 0; j < notifies.size(); j++) {
-                if (notifyId.equalsIgnoreCase(notifies.get(i).getId())) {
+                if (notifyId == notifies.get(i).getId()) {
                     return actionEntity;
                 }
             }
@@ -185,13 +173,13 @@ public final class ApplicationContext {
      * @param notifyId      消息ID
      * @return
      */
-    private Notify findNotifyById(String notifyId) {
+    private Notify findNotifyById(int notifyId) {
         for (int i = 0; i < actionlist.size(); i++) {
             ActionEntity actionEntity = actionlist.get(i);
             ArrayList<Notify> notifies = actionEntity.getNotifies();
 
             for (int j = 0; j < notifies.size(); j++) {
-                if (notifyId.equalsIgnoreCase(notifies.get(i).getId())) {
+                if (notifyId == notifies.get(i).getId()) {
                     return notifies.get(i);
                 }
             }
@@ -201,23 +189,11 @@ public final class ApplicationContext {
     }
 
     /**
-     * 根据task 的资源ID来创建task
-     * @param resId
-     * @return
-     */
-    private SimpleTask createTask(int resId) {
-        String taskId = context.getString(resId);
-
-        return createTask(taskId, resId);
-    }
-
-    /**
      * 创建task对象
      * @param taskId    task的ID
-     * @param resId     task引用的资源ID
-     * @return
+     * @return  SimpleTask的子类的对象
      */
-    private SimpleTask createTask(String taskId, int resId) {
+    private SimpleTask createTask(int taskId) {
         TaskEntity taskEntity = findTask(taskId);
 
         Class<?> clazz = null;
@@ -245,10 +221,10 @@ public final class ApplicationContext {
      * @param taskId    task id
      * @return
      */
-    private TaskEntity findTask(String taskId) {
+    private TaskEntity findTask(int taskId) {
         for (int i = 0; i < taskList.size(); i++) {
             TaskEntity taskEntity = taskList.get(i);
-            if (taskId.equalsIgnoreCase(taskEntity.getId())) {
+            if (taskId == taskEntity.getId()) {
                 return taskEntity;
             }
         }
@@ -279,13 +255,12 @@ public final class ApplicationContext {
                         } else if ("action".equalsIgnoreCase(startTagName)) {
                             actionEntity = new ActionEntity();
 
-                            String actionId = pullParser.getAttributeValue(null, "id");
+                            String actionIdName = pullParser.getAttributeValue(null, "id");
 
-                            if (actionId.startsWith("$")) {
-                                actionId = context.getString(getItemResourceValue(actionId));
+                            int actionId = 0;
+                            if (actionIdName.startsWith("$")) {
+                                actionId = getItemResourceId(actionIdName);
                             }
-
-                            Logger.getLogger().d("actionId : " + actionId);
 
                             actionEntity.setId(actionId);
                             actionEntity.setName(pullParser.getAttributeValue(null, "name"));
@@ -294,12 +269,11 @@ public final class ApplicationContext {
                         } else if ("notify".equalsIgnoreCase(startTagName)) {
                             Notify notify = new Notify();
 
-                            String notifyId = pullParser.getAttributeValue(null, "id");
+                            String notifyIdName = pullParser.getAttributeValue(null, "id");
+                            int notifyId = 0;
 
-                            if (notifyId.startsWith("$")) {
-                                int notifyResId = getItemResourceValue(notifyId);
-                                notifyId = context.getString(notifyResId);
-                                notify.setResId(notifyResId);
+                            if (notifyIdName.startsWith("$")) {
+                                notifyId = getItemResourceId(notifyIdName);
                             }
 
                             notify.setId(notifyId);
@@ -312,11 +286,11 @@ public final class ApplicationContext {
                         } else if ("task".equalsIgnoreCase(startTagName)) {
                             taskEntity = new TaskEntity();
 
-                            String taskId = pullParser.getAttributeValue(null, "id");
+                            String taskIdName = pullParser.getAttributeValue(null, "id");
+                            int taskId = 0;
 
-                            if (taskId.startsWith("$")) {
-                                taskEntity.setResId(getItemResourceValue(taskId));
-                                taskId = context.getString(getItemResourceValue(taskId));
+                            if (taskIdName.startsWith("$")) {
+                                taskId = getItemResourceId(taskIdName);
                             }
 
                             taskEntity.setId(taskId);

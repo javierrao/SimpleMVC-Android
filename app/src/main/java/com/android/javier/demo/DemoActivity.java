@@ -7,6 +7,9 @@ import android.widget.Button;
 import com.android.javier.simplemvc.interfaces.IAction;
 import com.android.javier.simplemvc.app.AbstractActivity;
 import com.android.javier.simplemvc.interfaces.INotify;
+import com.android.javier.simplemvc.util.Logger;
+
+import java.lang.reflect.Field;
 
 public class DemoActivity extends AbstractActivity {
 
@@ -28,7 +31,7 @@ public class DemoActivity extends AbstractActivity {
         testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendNotification(R.string.ids_notify_user_login, "username", "password");
+                doActionNotify(R.id.ids_notify_user_login, "username", "password");
             }
         });
     }

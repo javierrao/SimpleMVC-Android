@@ -18,7 +18,7 @@ public final class TaskManager {
 
     private static TaskManager manager;
 
-    private HashMap<String, SimpleTask> executingMap = new HashMap<String, SimpleTask>();
+    private HashMap<Integer, SimpleTask> executingMap = new HashMap<Integer, SimpleTask>();
 
     public static TaskManager getInstance() {
         if (manager == null) {
