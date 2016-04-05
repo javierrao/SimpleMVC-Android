@@ -1,9 +1,9 @@
 package com.android.javier.simplemvc.entity;
 
 /**
- * Created by javie on 2016/3/27.
+ * Created by javier on 2016/3/27.
  */
-public class TaskEntity {
+public final class TaskEntity {
     private int id;
     private String name;
     private String type;

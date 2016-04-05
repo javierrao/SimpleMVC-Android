@@ -6,4 +6,8 @@
     <item name="ids_notify_user_login" type="id" />
     <!-- task id 配置 -->
     <item name="ids_task_user_login" type="id" />
+    <!-- 异步操作数据库的task -->
+    <item name="ids_task_set_user" type="id" />
+    <!-- dao id 配置 -->
+    <item name="ids_dao_user" type="id" />
 </resources>

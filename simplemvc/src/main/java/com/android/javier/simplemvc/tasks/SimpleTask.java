@@ -3,14 +3,14 @@ package com.android.javier.simplemvc.tasks;
 import android.os.AsyncTask;
 
 import com.android.javier.simplemvc.entity.TaskEntity;
-import com.android.javier.simplemvc.interfaces.IAsyncTaskCallback;
+import com.android.javier.simplemvc.interfaces.ISimpleTaskCallback;
 import com.android.javier.simplemvc.interfaces.IEncrypt;
 
 /**
  * Created by javier on 2016/3/25.
  */
 public abstract class SimpleTask extends AsyncTask {
-    protected IAsyncTaskCallback callback;
+    protected ISimpleTaskCallback callback;
     protected IEncrypt encrypt;
 
     private TaskEntity taskEntity;
@@ -31,11 +31,11 @@ public abstract class SimpleTask extends AsyncTask {
         return taskEntity.getType();
     }
 
-    public IAsyncTaskCallback getCallback() {
+    public ISimpleTaskCallback getCallback() {
         return callback;
     }
 
-    public void setCallback(IAsyncTaskCallback callback) {
+    public void setCallback(ISimpleTaskCallback callback) {
         this.callback = callback;
     }
 

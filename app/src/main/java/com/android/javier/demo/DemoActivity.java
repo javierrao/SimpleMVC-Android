@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.javier.simplemvc.app.SimpleActivity;
 import com.android.javier.simplemvc.interfaces.IAction;
-import com.android.javier.simplemvc.app.AbstractActivity;
 import com.android.javier.simplemvc.interfaces.INotify;
-import com.android.javier.simplemvc.util.Logger;
 
-import java.lang.reflect.Field;
-
-public class DemoActivity extends AbstractActivity {
+public class DemoActivity extends SimpleActivity {
 
     private Button testbtn;
 

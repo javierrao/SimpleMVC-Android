@@ -1,21 +1,25 @@
 package com.android.javier.simplemvc.app;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.android.javier.simplemvc.ApplicationContext;
+import com.android.javier.simplemvc.interfaces.IAction;
+import com.android.javier.simplemvc.interfaces.IApplicationWidget;
+import com.android.javier.simplemvc.interfaces.INotify;
 
 /**
- * Created by javier on 2016/3/25.
+ * Created by javier on 2016/4/3.
  */
-public abstract class AbstractActivity extends Activity implements IApplicationWidget {
+public abstract class SimpleFragment extends Fragment implements IApplicationWidget {
 
     protected ApplicationContext applicationContext;
 
     @Override
-    public void setContentView(int layoutResID) {
-        super.setContentView(layoutResID);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         init();
         initView();
@@ -23,8 +27,8 @@ public abstract class AbstractActivity extends Activity implements IApplicationW
         prepareComplete();
     }
 
-    private void init() {
-        applicationContext = ApplicationContext.getApplicationContext(getApplicationContext());
+    protected void init() {
+        applicationContext = ApplicationContext.getApplicationContext(getContext());
     }
 
     protected void doActionNotify(int notifyResId, Object body) {
@@ -37,17 +41,12 @@ public abstract class AbstractActivity extends Activity implements IApplicationW
 
     @Override
     public View getViewById(int resid) {
-        return findViewById(resid);
-    }
-
-    @Override
-    public Activity getActivity() {
-        return this;
+        return getActivity().findViewById(resid);
     }
 
     @Override
     public Fragment getFragment() {
-        return null;
+        return this;
     }
 
     protected abstract void initView();

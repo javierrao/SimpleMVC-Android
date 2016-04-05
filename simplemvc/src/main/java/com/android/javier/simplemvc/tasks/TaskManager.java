@@ -2,6 +2,7 @@ package com.android.javier.simplemvc.tasks;
 
 import android.os.AsyncTask;
 
+import com.android.javier.simplemvc.ApplicationContext;
 import com.android.javier.simplemvc.interfaces.IEncrypt;
 import com.android.javier.simplemvc.util.Logger;
 import com.android.javier.simplemvc.net.RequestEntity;
@@ -35,7 +36,7 @@ public final class TaskManager {
      * @param url   请求的url
      * @param param 请求参数
      */
-    public void executeTaskHttpPost(SimpleTask task, String url, String param, String tokenId) {
+    public void executeTaskHttpPost(SimpleNetworkTask task, String url, String param, String tokenId) {
         if (url.startsWith("https") || url.startsWith("HTTPS")) {
             executeTask(task, url, "POST", "https", false, param, tokenId);
         } else {
@@ -50,7 +51,7 @@ public final class TaskManager {
      * @param url   请求的url
      * @param param 请求参数
      */
-    public void executeTaskHttpPostEncrypt(SimpleTask task, String url, String param, IEncrypt encrypt, String tokenId) {
+    public void executeTaskHttpPostEncrypt(SimpleNetworkTask task, String url, String param, IEncrypt encrypt, String tokenId) {
         task.setEncrypt(encrypt);
 
         if (url.startsWith("https") || url.startsWith("HTTPS")) {
@@ -67,7 +68,7 @@ public final class TaskManager {
      * @param url   请求的url
      * @param param 请求参数
      */
-    public void executeTaskHttpGet(SimpleTask task, String url, String param, String tokenId) {
+    public void executeTaskHttpGet(SimpleNetworkTask task, String url, String param, String tokenId) {
         if (url.startsWith("https") || url.startsWith("HTTPS")) {
             executeTask(task, url, "GET", "https", false, param, tokenId);
         } else {
@@ -82,7 +83,7 @@ public final class TaskManager {
      * @param url   请求的url
      * @param param 请求参数
      */
-    public void executeTaskHttpGetEncrypt(SimpleTask task, String url, String param, IEncrypt encrypt, String tokenId) {
+    public void executeTaskHttpGetEncrypt(SimpleNetworkTask task, String url, String param, IEncrypt encrypt, String tokenId) {
         task.setEncrypt(encrypt);
 
         if (url.startsWith("https") || url.startsWith("HTTPS")) {
@@ -90,6 +91,11 @@ public final class TaskManager {
         } else {
             executeTask(task, url, "GET", "http", true, param, tokenId);
         }
+    }
+
+    public void executeAsyncDatabseTask(SimpleDatabaseTask task, Object... param) {
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, param);
+        executingMap.put(task.getTid(), task);
     }
 
     /**
@@ -118,7 +124,12 @@ public final class TaskManager {
         executingMap.clear();
     }
 
-    private void executeTask(SimpleTask task, String url, String method, String protocol,
+    public void destroy() {
+        removeAllTask();
+        manager = null;
+    }
+
+    private void executeTask(SimpleNetworkTask task, String url, String method, String protocol,
                              boolean encrypt, String param, String tokenId) {
         int encoder_int = 0;
 

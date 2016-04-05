@@ -14,5 +14,20 @@
             <type>http</type>
             <meta-data>json</meta-data>
         </task>
+
+        <task id="${ids_task_set_user}" name="com.android.javier.demo.tasks.SetUserInfoTask">
+            <type>db</type>
+            <meta-data/>
+        </task>
     </task-config>
+
+    <!-- 数据源配置 -->
+    <dataSource>
+        <name>simple_mvc.db</name>
+        <version>1</version>
+        <backup_when_need_upgrade>true</backup_when_need_upgrade>
+        <daos>
+            <dao id="${ids_dao_user}" name="com.android.javier.demo.dao.UserDao" />
+        </daos>
+    </dataSource>
 </application-context>

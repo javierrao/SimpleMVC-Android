@@ -5,9 +5,9 @@ import com.android.javier.simplemvc.notify.Notify;
 import java.util.ArrayList;
 
 /**
- * Created by javie on 2016/3/27.
+ * Created by javier on 2016/3/27.
  */
-public class ActionEntity {
+public final class ActionEntity {
     private int id;
     private String name;
 

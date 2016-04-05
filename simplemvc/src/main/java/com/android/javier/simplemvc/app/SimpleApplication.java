@@ -3,6 +3,7 @@ package com.android.javier.simplemvc.app;
 import android.app.Application;
 
 import com.android.javier.simplemvc.ApplicationContext;
+import com.android.javier.simplemvc.db.SimpleDatabase;
 import com.android.javier.simplemvc.util.Logger;
 
 /**
@@ -10,9 +11,22 @@ import com.android.javier.simplemvc.util.Logger;
  */
 public class SimpleApplication extends Application {
 
+    protected ApplicationContext applicationContext;
+
+    public SimpleApplication() {
+        applicationContext = ApplicationContext.getApplicationContext(this);
+    }
+
     protected void initSimpleMVC(int contextResId) {
-        ApplicationContext appContext = ApplicationContext.getApplicationContext(this);
-        appContext.init(contextResId);
+        applicationContext.init(contextResId);
+    }
+
+    protected void initSimpleMVC(String contextFileName) {
+        applicationContext.init(contextFileName);
+    }
+
+    protected void initDatabase() {
+        applicationContext.initDatabase();
     }
 
     protected void initLogger(String tag, String appname, String logfileName, boolean debug) {
@@ -27,6 +41,8 @@ public class SimpleApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+
+        applicationContext.destroy();
     }
 
     @Override

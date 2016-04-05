@@ -18,7 +18,6 @@ public abstract class SimpleNetworkTask<T> extends SimpleTask {
 
     private HttpSvr httpSvr;
 
-
     public SimpleNetworkTask(TaskEntity entity) {
         super(entity);
     }
@@ -102,6 +101,24 @@ public abstract class SimpleNetworkTask<T> extends SimpleTask {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+
+        if (httpSvr != null) {
+            httpSvr.destroy();
+        }
+    }
+
+    @Override
+    protected void onCancelled(Object o) {
+        super.onCancelled(o);
+
+        if (httpSvr != null) {
+            httpSvr.destroy();
         }
     }
 
