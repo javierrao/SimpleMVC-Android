@@ -2,7 +2,10 @@ package com.android.javier.simplemvc.net;
 
 /**
  * Created by javier on 2016/3/29.
+ * <p>
+ * 描述错误的对象
  */
+@SuppressWarnings("unused")
 public class ErrorEntity {
     private int code;
     private String message;

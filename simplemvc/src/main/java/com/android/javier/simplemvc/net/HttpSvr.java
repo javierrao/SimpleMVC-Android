@@ -22,7 +22,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-public class HttpSvr {
+@SuppressWarnings("unused")
+public final class HttpSvr {
 
     private static String MODE = "UTF-8";
 
@@ -30,15 +31,6 @@ public class HttpSvr {
     private HttpsURLConnection httpsConnection;
 
     private String accessToken = "";
-
-    public HttpSvr() {
-
-    }
-
-    public HttpSvr(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
 
     public ResponseEntity httpPost(String url, String data, boolean encrypt) {
         if (encrypt) {
@@ -58,7 +50,7 @@ public class HttpSvr {
 
     private ResponseEntity httpRequest(String requestUrl, String data, String method) {
         try {
-            URL url = null;
+            URL url;
 
             if (method.equalsIgnoreCase("GET")) {
                 url = new URL(requestUrl + "?" + data);
@@ -110,7 +102,7 @@ public class HttpSvr {
 
     private ResponseEntity httpsRequest(String requestUrl, String data, String method) {
         try {
-            URL url = null;
+            URL url;
 
             if (method.equalsIgnoreCase("get")) {
                 url = new URL(requestUrl + "?" + data);
@@ -123,7 +115,6 @@ public class HttpSvr {
             context.init(null, new TrustManager[]{new TrustAllManager()}, null);
             HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-
                 @Override
                 public boolean verify(String arg0, SSLSession arg1) {
                     return true;
@@ -160,27 +151,29 @@ public class HttpSvr {
             return createResponseEntity(author, responseBody, responseCode);
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e){
+            return createResponseEntity("", "", HttpURLConnection.HTTP_BAD_REQUEST);
+
+        } catch (KeyManagementException e) {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e){
+            return createResponseEntity("", "", HttpURLConnection.HTTP_BAD_REQUEST);
+
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            return createResponseEntity("", "", HttpURLConnection.HTTP_BAD_REQUEST);
+
         } catch (IOException e) {
             e.printStackTrace();
-
-            destroy();
-
             return createResponseEntity("", "", HttpURLConnection.HTTP_CLIENT_TIMEOUT);
+
+        } finally {
+            destroy();
         }
-
-        destroy();
-
-        return createResponseEntity("", "", HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
 
     public String download(String downUrl) {
-        StringBuffer sb = new StringBuffer();
-        String line = null;
+        StringBuilder sb = new StringBuilder();
+        String line;
         BufferedReader buffer = null;
         HttpURLConnection connection = null;
         try {
@@ -209,8 +202,6 @@ public class HttpSvr {
                     buffer.close();
             } catch (IOException e) {
                 e.printStackTrace();
-
-                return null;
             }
         }
 
@@ -231,7 +222,7 @@ public class HttpSvr {
         connection.setReadTimeout(30000);
     }
 
-    private void writeRequest(URLConnection connection, String data) throws IOException{
+    private void writeRequest(URLConnection connection, String data) throws IOException {
         OutputStreamWriter outputStream = new OutputStreamWriter(connection.getOutputStream());
         outputStream.write(data);
         outputStream.flush();
@@ -239,7 +230,7 @@ public class HttpSvr {
     }
 
     private String readResponse(URLConnection connection) throws IOException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String readLine;
         InputStreamReader input = new InputStreamReader(connection.getInputStream(), MODE);
         BufferedReader responseReader = new BufferedReader(input);
@@ -257,9 +248,9 @@ public class HttpSvr {
     /**
      * 创建相应结果对象
      *
-     * @param author
-     * @param body
-     * @return
+     * @param author 授权token id
+     * @param body   相应消息内容
+     * @return ResponseEntity 对象
      */
     private ResponseEntity createResponseEntity(String author, String body, int code) {
         ResponseEntity entity = new ResponseEntity();

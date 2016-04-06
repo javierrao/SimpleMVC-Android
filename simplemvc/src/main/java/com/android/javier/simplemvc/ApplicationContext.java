@@ -1,6 +1,7 @@
 package com.android.javier.simplemvc;
 
 import android.content.Context;
+import android.util.SparseArray;
 import android.util.Xml;
 
 import com.android.javier.simplemvc.db.SimpleDatabase;
@@ -21,22 +22,61 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by javier on 2016/3/26.
+ * <p>
+ * 描述应用程序中所包含的 action、task、dataSource，与raw/ApplicationContext.xml相对应
+ * 为需要用到该对象的地方提供对象的创建，并且将配置中的id属性，转换成用android id资源来代替，这样可以方便使用的时候存取
+ * <p>
+ * 例如： 配置的action id 为 ${ids_action_user_login} 那么就必须在values下定义ids.xml文件，并且配置如下：
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <resources>
+ * <item name="ids_action_user_login" type="id"/>
+ * </resources>
+ * <p>
+ * 那么在使用的时候则可以使用R.id.ids_action_user_login来获取对应的对象
  */
 public final class ApplicationContext {
+
+    /**
+     * application context对象，描述了 action、task、dataSource
+     */
     private static ApplicationContext applicationContext;
 
+    /**
+     * 应用程序上下文
+     */
     private Context context;
 
+    /**
+     * 是否初始化。
+     * 确保application context被初始化过，且仅初始化一次。
+     * 频繁的初始化application context会带来性能的损耗
+     */
     public static boolean bInit = false;
 
+    /**
+     * 应用程序 action 描述的集合
+     */
     private ArrayList<ActionEntity> actionlist = null;
+
+    /**
+     * 应用程序 task 描述的集合
+     */
     private ArrayList<TaskEntity> taskList = null;
+
+    /**
+     * 描述应用程序数据源的对象
+     */
     private DataSourceEntity dataSourceEntity = null;
 
+    /**
+     * 单例方法，创建或获取 ApplicationContext 对象
+     *
+     * @param context android 应用程序上下文
+     * @return ApplicationContext对象
+     */
     public static ApplicationContext getApplicationContext(Context context) {
         if (applicationContext == null) {
             applicationContext = new ApplicationContext(context);
@@ -45,6 +85,11 @@ public final class ApplicationContext {
         return applicationContext;
     }
 
+    /**
+     * 重载的获取 ApplicationContext 对象的单例方法，调用该方法之前需要确保 ApplicationContext 已经被初始化，否则返回的对象为 null
+     *
+     * @return ApplicationContext对象
+     */
     public static ApplicationContext getApplicationContext() {
         if (bInit) {
             return applicationContext;
@@ -54,6 +99,11 @@ public final class ApplicationContext {
         return null;
     }
 
+    /**
+     * 构造方法
+     *
+     * @param context android 应用程序上下文
+     */
     protected ApplicationContext(Context context) {
         this.context = context;
     }
@@ -61,19 +111,18 @@ public final class ApplicationContext {
     /**
      * 通过配置文件文件名初始化
      *
-     * @param filename 配置文件名称
-     */
+     * @param filename 配置文件名
     public void init(String filename) {
-        if (bInit) {
-            Logger.getLogger().w("ApplicationContext already initialization");
-            return;
-        }
-        int res = context.getResources().getIdentifier(context.getPackageName() + ":raw/" + filename, null, null);
-        init(res);
+    if (bInit) {
+    Logger.getLogger().w("ApplicationContext already initialization");
+    return;
     }
+    int res = context.getResources().getIdentifier(context.getPackageName() + ":raw/" + filename, null, null);
+    init(res);
+    }*/
 
     /**
-     * 初始化数据库
+     * 初始化数据库，如果在应用程序中需要用到数据库，则调用该方法，否则不需要调用
      */
     public void initDatabase() {
         if (!bInit) {
@@ -142,7 +191,7 @@ public final class ApplicationContext {
      * 根据taskID获取task
      *
      * @param taskId task id
-     * @return
+     * @return SimpleTask 对象
      */
     public SimpleTask getTask(int taskId) {
         if (!bInit) {
@@ -155,8 +204,8 @@ public final class ApplicationContext {
     /**
      * 根据dao配置的ID查找对应的DAO对象
      *
-     * @param daoId
-     * @return
+     * @param daoId dao 配置的资源ID
+     * @return IDao 对象
      */
     public IDao getDao(int daoId) {
         if (!bInit) {
@@ -164,7 +213,7 @@ public final class ApplicationContext {
             return null;
         }
 
-        String daoName = dataSourceEntity.getDaos().get(daoId);
+        String daoName = String.valueOf(dataSourceEntity.getDaoArray().get(daoId));
 
         return createDao(daoName);
     }
@@ -186,14 +235,12 @@ public final class ApplicationContext {
     /**
      * 获取资源ID
      *
-     * @param str
-     * @return
+     * @param str 资源文件中ID的名称
+     * @return 资源ID
      */
     private int getItemResourceId(String str) {
         String tmpStr = str.substring(2, str.length() - 1);
-        int res = context.getResources().getIdentifier(context.getPackageName() + ":id/" + tmpStr, null, null);
-
-        return res;
+        return context.getResources().getIdentifier(context.getPackageName() + ":id/" + tmpStr, null, null);
     }
 
     /**
@@ -203,11 +250,11 @@ public final class ApplicationContext {
      * @return IAction对象
      */
     private IAction createAction(String actionName) {
-        if (actionName == "") {
+        if (actionName.equals("")) {
             return null;
         }
 
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
             clazz = Class.forName(actionName);
         } catch (Exception e) {
@@ -217,8 +264,7 @@ public final class ApplicationContext {
 
         Constructor<?> cons[] = clazz.getConstructors();
         try {
-            SimpleAction simpleAction = (SimpleAction) cons[0].newInstance(context);
-            return simpleAction;
+            return (SimpleAction) cons[0].newInstance(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -230,7 +276,7 @@ public final class ApplicationContext {
      * 根据消息ID查询处理该消息的action
      *
      * @param notifyId 消息ID
-     * @return
+     * @return action描述对象
      */
     private ActionEntity findActionByNotifyId(int notifyId) {
         for (int i = 0; i < actionlist.size(); i++) {
@@ -251,7 +297,7 @@ public final class ApplicationContext {
      * 根据消息名称查询需要发送的消息
      *
      * @param notifyId 消息ID
-     * @return
+     * @return 返回消息描述对象
      */
     private Notify findNotifyById(int notifyId) {
         for (int i = 0; i < actionlist.size(); i++) {
@@ -277,7 +323,11 @@ public final class ApplicationContext {
     private SimpleTask createTask(int taskId) {
         TaskEntity taskEntity = findTask(taskId);
 
-        Class<?> clazz = null;
+        if (taskEntity == null) {
+            return null;
+        }
+
+        Class<?> clazz;
         try {
             clazz = Class.forName(taskEntity.getName());
         } catch (Exception e) {
@@ -288,8 +338,7 @@ public final class ApplicationContext {
         Constructor<?> cons[] = clazz.getConstructors();
 
         try {
-            SimpleTask task = (SimpleTask) cons[0].newInstance(taskEntity);
-            return task;
+            return (SimpleTask) cons[0].newInstance(taskEntity);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -301,10 +350,10 @@ public final class ApplicationContext {
      * 创建DAO对象
      *
      * @param daoName dao的全路径
-     * @return
+     * @return IDao 对象
      */
     private IDao createDao(String daoName) {
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
             clazz = Class.forName(daoName);
         } catch (Exception e) {
@@ -315,8 +364,7 @@ public final class ApplicationContext {
         Constructor<?> cons[] = clazz.getConstructors();
 
         try {
-            IDao dao = (IDao) cons[0].newInstance(context);
-            return dao;
+            return (IDao) cons[0].newInstance(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -328,7 +376,7 @@ public final class ApplicationContext {
      * 根据task id查找task
      *
      * @param taskId task id
-     * @return
+     * @return task描述对象
      */
     private TaskEntity findTask(int taskId) {
         for (int i = 0; i < taskList.size(); i++) {
@@ -341,6 +389,11 @@ public final class ApplicationContext {
         return null;
     }
 
+    /**
+     * 解析 raw/application_context.xml配置文件
+     *
+     * @param xml 配置文件输入流
+     */
     private void xmlParser(InputStream xml) {
         try {
             XmlPullParser pullParser = Xml.newPullParser();
@@ -349,7 +402,7 @@ public final class ApplicationContext {
 
             ActionEntity actionEntity = null;
             ArrayList<Notify> notifies = null;
-            HashMap<Integer, String> daos = null;
+            SparseArray<String> daoArray = null;
 
             TaskEntity taskEntity = null;
 
@@ -375,8 +428,8 @@ public final class ApplicationContext {
                             actionEntity.setId(actionId);
                             actionEntity.setName(pullParser.getAttributeValue(null, "name"));
 
-                            notifies = new ArrayList<Notify>();
-                        } else if ("notify".equalsIgnoreCase(startTagName)) {
+                            notifies = new ArrayList<>();
+                        } else if ("notify".equalsIgnoreCase(startTagName) && notifies != null) {
                             Notify notify = new Notify();
 
                             String notifyIdName = pullParser.getAttributeValue(null, "id");
@@ -406,41 +459,51 @@ public final class ApplicationContext {
                             taskEntity.setId(taskId);
                             taskEntity.setName(pullParser.getAttributeValue(null, "name"));
 
-                        } else if ("type".equalsIgnoreCase(startTagName)) {
+                        } else if ("type".equalsIgnoreCase(startTagName) && taskEntity != null) {
                             taskEntity.setType(pullParser.nextText());
 
-                        } else if ("meta-data".equalsIgnoreCase(startTagName)) {
+                        } else if ("meta-data".equalsIgnoreCase(startTagName) && taskEntity != null) {
                             taskEntity.setMetaData(pullParser.nextText());
+
                         } else if ("dataSource".equalsIgnoreCase(startTagName)) {
                             dataSourceEntity = new DataSourceEntity();
-                        } else if ("name".equalsIgnoreCase(startTagName)) {
+
+                        } else if ("name".equalsIgnoreCase(startTagName) && dataSourceEntity != null) {
                             dataSourceEntity.setDbName(pullParser.nextText());
-                        } else if ("version".equalsIgnoreCase(startTagName)) {
+
+                        } else if ("version".equalsIgnoreCase(startTagName) && dataSourceEntity != null) {
                             dataSourceEntity.setVersion(Integer.parseInt(pullParser.nextText()));
-                        } else if ("backup_when_need_upgrade".equalsIgnoreCase(startTagName)) {
+
+                        } else if ("backup_when_need_upgrade".equalsIgnoreCase(startTagName) && dataSourceEntity != null) {
                             dataSourceEntity.setBackUpWhenUpgrade(Boolean.parseBoolean(pullParser.nextText()));
-                        } else if ("daos".equalsIgnoreCase(startTagName)) {
-                            daos = new HashMap<Integer, String>();
-                        } else if ("dao".equalsIgnoreCase(startTagName)) {
+
+                        } else if ("dao-config".equalsIgnoreCase(startTagName)) {
+                            daoArray = new SparseArray<>();
+
+                        } else if ("dao".equalsIgnoreCase(startTagName) && daoArray != null) {
                             int daoId = 0;
                             String daoIdName = pullParser.getAttributeValue(null, "id");
 
                             if (daoIdName.startsWith("$")) {
                                 daoId = getItemResourceId(daoIdName);
                             }
-                            daos.put(daoId, pullParser.getAttributeValue(null, "name"));
+                            daoArray.put(daoId, pullParser.getAttributeValue(null, "name"));
                         }
                         break;
 
                     case XmlPullParser.END_TAG:
                         String endTagName = pullParser.getName();
-                        if ("action".equalsIgnoreCase(endTagName)) {
+                        if ("action".equalsIgnoreCase(endTagName) && actionEntity != null) {
                             actionEntity.setNotifies(notifies);
                             actionlist.add(actionEntity);
+
+                            actionEntity = null;
                         } else if ("task".equalsIgnoreCase(endTagName)) {
                             taskList.add(taskEntity);
-                        } else if ("daos".equalsIgnoreCase(endTagName)) {
-                            dataSourceEntity.setDaos(daos);
+
+                            taskEntity = null;
+                        } else if ("dao-config".equalsIgnoreCase(endTagName)) {
+                            dataSourceEntity.setDaoArray(daoArray);
                         }
                         break;
                 }

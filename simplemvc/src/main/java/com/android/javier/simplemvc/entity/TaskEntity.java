@@ -2,6 +2,8 @@ package com.android.javier.simplemvc.entity;
 
 /**
  * Created by javier on 2016/3/27.
+ * <p>
+ * 描述Task的实体
  */
 public final class TaskEntity {
     private int id;

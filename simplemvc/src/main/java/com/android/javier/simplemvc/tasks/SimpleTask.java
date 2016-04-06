@@ -8,13 +8,21 @@ import com.android.javier.simplemvc.interfaces.IEncrypt;
 
 /**
  * Created by javier on 2016/3/25.
+ * <p>
+ * 所需要执行任务的父类，继承自AsyncTask
  */
+@SuppressWarnings("unused")
 public abstract class SimpleTask extends AsyncTask {
     protected ISimpleTaskCallback callback;
     protected IEncrypt encrypt;
 
     private TaskEntity taskEntity;
 
+    /**
+     * 构造方法中获取配置文件中对该task的描述
+     *
+     * @param entity task 描述
+     */
     protected SimpleTask(TaskEntity entity) {
         this.taskEntity = entity;
     }

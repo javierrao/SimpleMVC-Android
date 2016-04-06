@@ -3,12 +3,12 @@ package com.android.javier.simplemvc.app;
 import android.app.Application;
 
 import com.android.javier.simplemvc.ApplicationContext;
-import com.android.javier.simplemvc.db.SimpleDatabase;
 import com.android.javier.simplemvc.util.Logger;
 
 /**
- * Created by javier on 2016/3/29.
+ * Created by javier.
  */
+@SuppressWarnings("unused")
 public class SimpleApplication extends Application {
 
     protected ApplicationContext applicationContext;
@@ -21,16 +21,12 @@ public class SimpleApplication extends Application {
         applicationContext.init(contextResId);
     }
 
-    protected void initSimpleMVC(String contextFileName) {
-        applicationContext.init(contextFileName);
-    }
-
     protected void initDatabase() {
         applicationContext.initDatabase();
     }
 
-    protected void initLogger(String tag, String appname, String logfileName, boolean debug) {
-       Logger.initLogger(tag, appname, logfileName, debug);
+    protected void initLogger(String tag, String applicationName, String logfileName, boolean debug) {
+        Logger.initLogger(tag, applicationName, logfileName, debug);
     }
 
     @Override

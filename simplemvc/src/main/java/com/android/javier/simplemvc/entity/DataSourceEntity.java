@@ -1,15 +1,18 @@
 package com.android.javier.simplemvc.entity;
 
-import java.util.HashMap;
+import android.util.SparseArray;
 
 /**
  * Created by javier on 2016/4/5.
+ * <p>
+ * 描述数据库的实体
  */
+@SuppressWarnings("unused")
 public final class DataSourceEntity {
     private String dbName;
     private int version;
     private boolean backUpWhenUpgrade;
-    private HashMap<Integer, String> daos;
+    private SparseArray<String> daoArray;
 
     public String getDbName() {
         return dbName;
@@ -35,11 +38,11 @@ public final class DataSourceEntity {
         this.backUpWhenUpgrade = backUpWhenUpgrade;
     }
 
-    public HashMap<Integer, String> getDaos() {
-        return daos;
+    public SparseArray<String> getDaoArray() {
+        return daoArray;
     }
 
-    public void setDaos(HashMap<Integer, String> daos) {
-        this.daos = daos;
+    public void setDaoArray(SparseArray<String> daoArray) {
+        this.daoArray = daoArray;
     }
 }

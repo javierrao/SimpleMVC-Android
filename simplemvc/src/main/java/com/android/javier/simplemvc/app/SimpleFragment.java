@@ -1,18 +1,16 @@
 package com.android.javier.simplemvc.app;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.android.javier.simplemvc.ApplicationContext;
-import com.android.javier.simplemvc.interfaces.IAction;
 import com.android.javier.simplemvc.interfaces.IApplicationWidget;
-import com.android.javier.simplemvc.interfaces.INotify;
 
 /**
- * Created by javier on 2016/4/3.
+ * Created by javier
  */
+@SuppressWarnings("unused")
 public abstract class SimpleFragment extends Fragment implements IApplicationWidget {
 
     protected ApplicationContext applicationContext;
@@ -40,8 +38,8 @@ public abstract class SimpleFragment extends Fragment implements IApplicationWid
     }
 
     @Override
-    public View getViewById(int resid) {
-        return getActivity().findViewById(resid);
+    public View getViewById(int resId) {
+        return getActivity().findViewById(resId);
     }
 
     @Override

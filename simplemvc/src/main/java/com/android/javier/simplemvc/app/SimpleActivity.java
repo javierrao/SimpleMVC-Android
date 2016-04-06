@@ -7,9 +7,7 @@ import android.view.View;
 import com.android.javier.simplemvc.ApplicationContext;
 import com.android.javier.simplemvc.interfaces.IApplicationWidget;
 
-/**
- * Created by javier on 2016/3/25.
- */
+@SuppressWarnings("unused")
 public abstract class SimpleActivity extends Activity implements IApplicationWidget {
 
     protected ApplicationContext applicationContext;
@@ -37,8 +35,8 @@ public abstract class SimpleActivity extends Activity implements IApplicationWid
     }
 
     @Override
-    public View getViewById(int resid) {
-        return findViewById(resid);
+    public View getViewById(int resId) {
+        return findViewById(resId);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.android.javier.demo;
 import com.android.javier.simplemvc.app.SimpleApplication;
 
 /**
- * Created by javier on 2016/3/29.
+ * Created by javier
  */
 public class BaseApplication extends SimpleApplication {
 

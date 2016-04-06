@@ -7,8 +7,7 @@ import com.android.javier.simplemvc.interfaces.IDao;
 /**
  * Created by javier on 2016/4/4.
  *
- * 1、根据对象创建表
- * 2、根据返回的cursor对象创建对象
+ * 异步执行数据库操作的任务的父类
  */
 public abstract class SimpleDatabaseTask<T> extends SimpleTask {
     public SimpleDatabaseTask(TaskEntity entity) {
@@ -25,7 +24,7 @@ public abstract class SimpleDatabaseTask<T> extends SimpleTask {
         super.onPostExecute(result);
 
         if (callback != null) {
-            callback.onResult(200, result, this);
+            callback.onDatabaseResult(result, this);
         }
     }
 

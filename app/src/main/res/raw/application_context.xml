@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+资源文件说明：
+${}：标识引用系统的ID资源，且id资源必须为引用系统的ID资源
+
+action-config：配置系统使用到的action列表
+action：配置系统使用到的action
+action id：action的唯一标识，引用系统ID资源。在应用中可以通过R.id.*来访问action
+action name：action类的全路径，该类必须为SimpleAction的子类
+notify：该action处理的消息，可以配置为多个
+notify id：notify的唯一标识
+notify name：notify名称，描述该notify的作用
+
+task-config：配置系统使用到的task列表
+task：配置使用的task
+task id：task的唯一标识
+task name：task类的全路径，该类必须为SimpleTask的子类
+task type：task类型，可取值为http和database，表示该task即将进行的操作
+task meta-data：task执行操作后返回数据的类型，可取返回为json和不设置
+
+dataSource：配置数据库
+name：数据库文件名称，注意需要带上.db
+version：数据库版本
+backup_when_need_upgrade：是否需要在数据库升级的时候备份现有数据
+dao-config：配置数据库操作的DAO列表
+dao：配置操作数据库的DAO对象
+dao id：dao的唯一标识，引用系统ID资源
+dao name：dao类全路径，该类必须实现IDao接口，否则无法创建
+-->
 <application-context>
     <!-- action 配置 -->
-    <!-- ${} 中的内容表示引用资源文件中定义的值 -->
     <action-config>
         <action id="${ids_action_user_login}" name="com.android.javier.demo.action.LoginAction">
             <notify id="${ids_notify_user_login}" name="execute_user_login"/>
@@ -16,7 +43,7 @@
         </task>
 
         <task id="${ids_task_set_user}" name="com.android.javier.demo.tasks.SetUserInfoTask">
-            <type>db</type>
+            <type>database</type>
             <meta-data/>
         </task>
     </task-config>
@@ -26,8 +53,8 @@
         <name>simple_mvc.db</name>
         <version>1</version>
         <backup_when_need_upgrade>true</backup_when_need_upgrade>
-        <daos>
+        <dao-config>
             <dao id="${ids_dao_user}" name="com.android.javier.demo.dao.UserDao" />
-        </daos>
+        </dao-config>
     </dataSource>
 </application-context>

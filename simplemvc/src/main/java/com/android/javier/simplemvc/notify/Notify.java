@@ -9,7 +9,6 @@ public class Notify implements INotify {
     private int id;
     private String name;
     private Object body;
-    private Class<?> type;
 
     @Override
     public int getId() {

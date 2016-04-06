@@ -13,6 +13,8 @@ import java.net.HttpURLConnection;
 
 /**
  * Created by javier on 2016/3/25.
+ *
+ * 异步执行网络请求操作的父类
  */
 public abstract class SimpleNetworkTask<T> extends SimpleTask {
 

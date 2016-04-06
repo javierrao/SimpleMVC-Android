@@ -39,7 +39,7 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
 
             // 异步执行数据库操作
             SimpleDatabaseTask setUserTask = getAsyncDatabaseTask(R.id.ids_task_set_user);
-            taskManager.executeAsyncDatabseTask(setUserTask, null);
+            taskManager.executeAsyncDatabaseTask(setUserTask, null);
         }
     }
 
@@ -54,5 +54,10 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
     public void onFailed(int code, ErrorEntity message, SimpleTask target) {
         // super.onFailed 必须调用
         super.onFailed(code, message, target);
+    }
+
+    @Override
+    public void onDatabaseResult(UserLoginEntity result, SimpleTask target) {
+
     }
 }

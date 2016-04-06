@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 /**
  * Created by javier on 2016/3/27.
+ * <p>
+ * 描述action的实体
  */
 public final class ActionEntity {
     private int id;

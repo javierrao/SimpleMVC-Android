@@ -14,9 +14,7 @@ import com.android.javier.simplemvc.tasks.SimpleTask;
 import com.android.javier.simplemvc.interfaces.ISimpleTaskCallback;
 import com.android.javier.simplemvc.tasks.TaskManager;
 
-/**
- * Created by javier on 2016/3/26.
- */
+@SuppressWarnings("unused ")
 public abstract class SimpleAction<T> implements IAction, ISimpleTaskCallback<T> {
     protected INotify notify;
     protected IApplicationWidget applicationWidget;
@@ -48,14 +46,15 @@ public abstract class SimpleAction<T> implements IAction, ISimpleTaskCallback<T>
 
     protected SimpleTask getTaskById(int taskId) {
         SimpleTask task = applicationContext.getTask(taskId);
-        task.setCallback(this);
+        if (task != null) {
+            task.setCallback(this);
+        }
         return task;
     }
 
     protected SimpleNetworkTask getAsyncHttpTask(int taskId) {
         try {
-            SimpleNetworkTask task = (SimpleNetworkTask) getTaskById(taskId);
-            return task;
+            return (SimpleNetworkTask) getTaskById(taskId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,8 +64,7 @@ public abstract class SimpleAction<T> implements IAction, ISimpleTaskCallback<T>
 
     protected SimpleDatabaseTask getAsyncDatabaseTask(int taskId) {
         try {
-            SimpleDatabaseTask task = (SimpleDatabaseTask) getTaskById(taskId);
-            return task;
+            return (SimpleDatabaseTask) getTaskById(taskId);
         } catch (Exception e) {
             e.printStackTrace();
         }

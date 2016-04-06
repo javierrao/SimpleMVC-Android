@@ -1,25 +1,27 @@
 package com.android.javier.simplemvc.tasks;
 
 import android.os.AsyncTask;
+import android.util.SparseArray;
 
-import com.android.javier.simplemvc.ApplicationContext;
 import com.android.javier.simplemvc.interfaces.IEncrypt;
 import com.android.javier.simplemvc.util.Logger;
 import com.android.javier.simplemvc.net.RequestEntity;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 /**
  * Created by javier on 2016/3/27.
+ * <p>
+ * 管理task的类，所有task的执行都在该类中进行，并且管理task的整个生命周期，直至被销毁
+ * 需要在确保task无用以后销毁或在出现异常中断执行的时候需要清空资源。
+ * <p>
+ * 例如：在一个网络请求的任务执行过程中，当task被强制终止以后，需要确保http资源被释放
  */
+@SuppressWarnings("unused")
 public final class TaskManager {
     private static Logger logger = Logger.getLogger();
 
     private static TaskManager manager;
 
-    private HashMap<Integer, SimpleTask> executingMap = new HashMap<Integer, SimpleTask>();
+    private SparseArray<SimpleTask> executingTaskArray = new SparseArray<>();
 
     public static TaskManager getInstance() {
         if (manager == null) {
@@ -93,9 +95,15 @@ public final class TaskManager {
         }
     }
 
-    public void executeAsyncDatabseTask(SimpleDatabaseTask task, Object... param) {
+    /**
+     * 异步执行数据库操作的任务
+     *
+     * @param task  执行异步数据库操作的任务
+     * @param param 参数
+     */
+    public void executeAsyncDatabaseTask(SimpleDatabaseTask task, Object... param) {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, param);
-        executingMap.put(task.getTid(), task);
+        executingTaskArray.put(task.getTid(), task);
     }
 
     /**
@@ -104,34 +112,49 @@ public final class TaskManager {
      * @param task 需要停止的task
      */
     public void removeTask(SimpleTask task) {
-        SimpleTask abstractAsyncTask = executingMap.get(task.getTid());
+        SimpleTask abstractAsyncTask = executingTaskArray.get(task.getTid());
         abstractAsyncTask.cancel(true);
 
-        executingMap.remove(task.getTid());
+        executingTaskArray.remove(task.getTid());
     }
 
     /**
      * 停止所有的task
      */
     public void removeAllTask() {
-        Iterator iter = executingMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            SimpleTask task = (SimpleTask) entry.getValue();
+        int key;
+        for (int i = 0; i < executingTaskArray.size(); i++) {
+            key = executingTaskArray.keyAt(i);
+
+            SimpleTask task = executingTaskArray.get(key);
             task.cancel(true);
         }
 
-        executingMap.clear();
+        executingTaskArray.clear();
     }
 
+    /**
+     * 关闭所有的task，并清空资源
+     */
     public void destroy() {
         removeAllTask();
         manager = null;
     }
 
+    /**
+     * 执行异步网络请求的任务
+     *
+     * @param task     需要执行的任务
+     * @param url      请求的url
+     * @param method   请求方式 get / post
+     * @param protocol 请求协议 http / https
+     * @param encrypt  是否加密
+     * @param param    请求参数
+     * @param tokenId  认证ID
+     */
     private void executeTask(SimpleNetworkTask task, String url, String method, String protocol,
                              boolean encrypt, String param, String tokenId) {
-        int encoder_int = 0;
+        int encoder_int;
 
         if (encrypt) {
             encoder_int = 1;
@@ -149,6 +172,6 @@ public final class TaskManager {
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestEntity);
 
-        executingMap.put(task.getTid(), task);
+        executingTaskArray.put(task.getTid(), task);
     }
 }
