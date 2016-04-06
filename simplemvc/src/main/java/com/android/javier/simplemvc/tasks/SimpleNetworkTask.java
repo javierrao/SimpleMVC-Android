@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 
 /**
  * Created by javier on 2016/3/25.
- *
+ * <p>
  * 异步执行网络请求操作的父类
  */
 public abstract class SimpleNetworkTask<T> extends SimpleTask {
@@ -103,6 +103,13 @@ public abstract class SimpleNetworkTask<T> extends SimpleTask {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (callback != null) {
+                ErrorEntity errorEntity = new ErrorEntity();
+                errorEntity.setCode(500);
+                errorEntity.setMessage("APP 内部错误");
+                callback.onFailed(errorEntity.getCode(), errorEntity, this);
+            }
         }
     }
 
@@ -124,7 +131,7 @@ public abstract class SimpleNetworkTask<T> extends SimpleTask {
         }
     }
 
-    protected abstract T onResponse(ResponseEntity responseEntity);
+    protected abstract T onResponse(ResponseEntity responseEntity) throws Exception;
 
-    protected abstract ErrorEntity onResponseError(ResponseEntity responseEntity) ;
+    protected abstract ErrorEntity onResponseError(ResponseEntity responseEntity);
 }

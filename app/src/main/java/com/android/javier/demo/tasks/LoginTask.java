@@ -6,8 +6,10 @@ import com.android.javier.simplemvc.net.ErrorEntity;
 import com.android.javier.simplemvc.net.ResponseEntity;
 import com.android.javier.simplemvc.tasks.SimpleNetworkTask;
 
+import org.json.JSONObject;
+
 /**
- * Created by javier on 2016/3/27.
+ * Created by javier
  */
 public class LoginTask extends SimpleNetworkTask<UserLoginEntity> {
     public LoginTask(TaskEntity entity) {
@@ -15,9 +17,13 @@ public class LoginTask extends SimpleNetworkTask<UserLoginEntity> {
     }
 
     @Override
-    protected UserLoginEntity onResponse(ResponseEntity responseEntity) {
+    protected UserLoginEntity onResponse(ResponseEntity responseEntity) throws Exception {
+        UserLoginEntity entity = new UserLoginEntity();
+        JSONObject jsonObject = responseEntity.getJsonContent();
+        entity.setAccount(jsonObject.getString("account"));
+        entity.setPassword("abc123");
 
-        return null;
+        return entity;
     }
 
     @Override

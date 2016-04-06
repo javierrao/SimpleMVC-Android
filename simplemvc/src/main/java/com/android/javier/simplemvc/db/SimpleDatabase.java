@@ -12,7 +12,7 @@ import com.android.javier.simplemvc.interfaces.IDao;
 
 /**
  * Created by javier on 2016/4/5.
- * <p>
+ * <p/>
  * 创建数据库的类，封装了基本数据库的实现，如创建、升级、打开、关闭、销毁
  */
 @SuppressWarnings("unused")
@@ -61,10 +61,10 @@ public final class SimpleDatabase {
             for (int i = 0; i < daoArray.size(); i++) {
                 key = daoArray.keyAt(i);
 
-                IDao idao = applicationContext.getDao(key);
+                SimpleDao simpleDao = applicationContext.getDao(key);
 
-                if (idao != null) {
-                    idao.onCreate(db);
+                if (simpleDao != null) {
+                    simpleDao.onCreate(db);
                 }
             }
         }
@@ -81,10 +81,10 @@ public final class SimpleDatabase {
             for (int i = 0; i < daoArray.size(); i++) {
                 key = daoArray.keyAt(i);
 
-                IDao idao = applicationContext.getDao(key);
+                SimpleDao simpleDao = applicationContext.getDao(key);
 
-                if (idao != null) {
-                    idao.onUpgrade(db);
+                if (simpleDao != null) {
+                    simpleDao.onUpgrade(db);
                 }
             }
         }
@@ -131,7 +131,7 @@ public final class SimpleDatabase {
      * @return SQLiteDatabase对象
      */
     public SQLiteDatabase open() {
-        if (database == null || !database.isOpen()) {
+        if (database == null) {
             database = simpleDatabaseHelper.getWritableDatabase();
         }
 

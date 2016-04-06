@@ -14,7 +14,7 @@ import com.android.javier.simplemvc.net.ErrorEntity;
 import com.android.javier.simplemvc.tasks.SimpleTask;
 
 /**
- * Created by javier on 2016/3/27.
+ * Created by javier
  */
 public class LoginAction extends SimpleAction<UserLoginEntity> {
 
@@ -32,14 +32,6 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
             // 异步执行http登录请求
             SimpleNetworkTask task = getAsyncHttpTask(R.id.ids_task_user_login);
             taskManager.executeTaskHttpPost(task, "https://192.168.0.111/redpacket/user/login", "account=18129938032&password=abc123", "");
-
-            // 同步执行数据库操作
-            UserDao userDao = (UserDao) getDao(R.id.ids_dao_user);
-            userDao.createUser();
-
-            // 异步执行数据库操作
-            SimpleDatabaseTask setUserTask = getAsyncDatabaseTask(R.id.ids_task_set_user);
-            taskManager.executeAsyncDatabaseTask(setUserTask, null);
         }
     }
 
@@ -48,6 +40,17 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
         // super.onResult 必须调用
         super.onResult(code, result, target);
 
+        if (target.getTid() == R.id.ids_task_user_login) {
+            // 同步将用户信息写入到数据库
+            UserDao userDao = (UserDao) getDao(R.id.ids_dao_user);
+            userDao.createUser(result);
+
+            /*
+            // 异步执行数据库操作
+            SimpleDatabaseTask setUserTask = getAsyncDatabaseTask(R.id.ids_task_set_user);
+            taskManager.executeAsyncDatabaseTask(setUserTask, null);
+            */
+        }
     }
 
     @Override

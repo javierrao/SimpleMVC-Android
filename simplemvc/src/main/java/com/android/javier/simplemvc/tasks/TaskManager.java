@@ -113,9 +113,11 @@ public final class TaskManager {
      */
     public void removeTask(SimpleTask task) {
         SimpleTask abstractAsyncTask = executingTaskArray.get(task.getTid());
-        abstractAsyncTask.cancel(true);
 
-        executingTaskArray.remove(task.getTid());
+        if (abstractAsyncTask != null) {
+            abstractAsyncTask.cancel(true);
+            executingTaskArray.remove(task.getTid());
+        }
     }
 
     /**

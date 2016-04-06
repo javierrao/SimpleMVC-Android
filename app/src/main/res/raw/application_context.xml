@@ -25,7 +25,7 @@ backup_when_need_upgrade：是否需要在数据库升级的时候备份现有�
 dao-config：配置数据库操作的DAO列表
 dao：配置操作数据库的DAO对象
 dao id：dao的唯一标识，引用系统ID资源
-dao name：dao类全路径，该类必须实现IDao接口，否则无法创建
+dao name：dao类全路径，该类必须实现SimpleDao的子类，否则无法创建
 -->
 <application-context>
     <!-- action 配置 -->
@@ -40,11 +40,6 @@ dao name：dao类全路径，该类必须实现IDao接口，否则无法创建
         <task id="${ids_task_user_login}" name="com.android.javier.demo.tasks.LoginTask">
             <type>http</type>
             <meta-data>json</meta-data>
-        </task>
-
-        <task id="${ids_task_set_user}" name="com.android.javier.demo.tasks.SetUserInfoTask">
-            <type>database</type>
-            <meta-data/>
         </task>
     </task-config>
 

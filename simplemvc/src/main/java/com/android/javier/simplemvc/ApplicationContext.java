@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.SparseArray;
 import android.util.Xml;
 
+import com.android.javier.simplemvc.db.SimpleDao;
 import com.android.javier.simplemvc.db.SimpleDatabase;
 import com.android.javier.simplemvc.entity.DataSourceEntity;
 import com.android.javier.simplemvc.interfaces.IAction;
@@ -207,7 +208,7 @@ public final class ApplicationContext {
      * @param daoId dao 配置的资源ID
      * @return IDao 对象
      */
-    public IDao getDao(int daoId) {
+    public SimpleDao getDao(int daoId) {
         if (!bInit) {
             Logger.getLogger().e("get dao failed. ApplicationContext must be initialization first");
             return null;
@@ -352,7 +353,7 @@ public final class ApplicationContext {
      * @param daoName dao的全路径
      * @return IDao 对象
      */
-    private IDao createDao(String daoName) {
+    private SimpleDao createDao(String daoName) {
         Class<?> clazz;
         try {
             clazz = Class.forName(daoName);
@@ -364,7 +365,7 @@ public final class ApplicationContext {
         Constructor<?> cons[] = clazz.getConstructors();
 
         try {
-            return (IDao) cons[0].newInstance(context);
+            return (SimpleDao) cons[0].newInstance(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
