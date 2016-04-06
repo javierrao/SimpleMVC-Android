@@ -1,6 +1,7 @@
 package com.android.javier.simplemvc;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 import android.util.Xml;
 
@@ -26,16 +27,16 @@ import java.util.ArrayList;
 
 /**
  * Created by javier on 2016/3/26.
- * <p>
+ * <p/>
  * 描述应用程序中所包含的 action、task、dataSource，与raw/ApplicationContext.xml相对应
  * 为需要用到该对象的地方提供对象的创建，并且将配置中的id属性，转换成用android id资源来代替，这样可以方便使用的时候存取
- * <p>
+ * <p/>
  * 例如： 配置的action id 为 ${ids_action_user_login} 那么就必须在values下定义ids.xml文件，并且配置如下：
  * <?xml version="1.0" encoding="utf-8"?>
  * <resources>
  * <item name="ids_action_user_login" type="id"/>
  * </resources>
- * <p>
+ * <p/>
  * 那么在使用的时候则可以使用R.id.ids_action_user_login来获取对应的对象
  */
 public final class ApplicationContext {
@@ -56,6 +57,11 @@ public final class ApplicationContext {
      * 频繁的初始化application context会带来性能的损耗
      */
     public static boolean bInit = false;
+
+    /**
+     * 数据库是否被初始化
+     */
+    public static boolean bDbInit = false;
 
     /**
      * 应用程序 action 描述的集合
@@ -131,8 +137,14 @@ public final class ApplicationContext {
             return;
         }
 
+        if (bDbInit) {
+            Logger.getLogger().w("Database is already init!");
+            return;
+        }
+
         SimpleDatabase database = SimpleDatabase.getSimpleDatabase();
         database.initDatabase(context, dataSourceEntity);
+        bDbInit = true;
     }
 
 
@@ -210,13 +222,38 @@ public final class ApplicationContext {
      */
     public SimpleDao getDao(int daoId) {
         if (!bInit) {
-            Logger.getLogger().e("get dao failed. ApplicationContext must be initialization first");
+            Logger.getLogger().e("get dao failed. ApplicationContext must be initialization first.");
+            return null;
+        }
+
+        if (!bDbInit) {
+            Logger.getLogger().e("get dao failed. Database must be initialization first.");
+            return null;
+        }
+
+        return getDao(daoId, SimpleDatabase.getSimpleDatabase().open());
+    }
+
+    /**
+     * 根据dao配置的ID查找对应的DAO对象
+     *
+     * @param daoId dao 配置的资源ID
+     * @return IDao 对象
+     */
+    public SimpleDao getDao(int daoId, SQLiteDatabase db) {
+        if (!bInit) {
+            Logger.getLogger().e("get dao failed. ApplicationContext must be initialization first.");
+            return null;
+        }
+
+        if (!bDbInit) {
+            Logger.getLogger().e("get dao failed. Database must be initialization first.");
             return null;
         }
 
         String daoName = String.valueOf(dataSourceEntity.getDaoArray().get(daoId));
 
-        return createDao(daoName);
+        return createDao(daoName, db);
     }
 
     /**
@@ -353,7 +390,7 @@ public final class ApplicationContext {
      * @param daoName dao的全路径
      * @return IDao 对象
      */
-    private SimpleDao createDao(String daoName) {
+    private SimpleDao createDao(String daoName, SQLiteDatabase db) {
         Class<?> clazz;
         try {
             clazz = Class.forName(daoName);
@@ -365,7 +402,7 @@ public final class ApplicationContext {
         Constructor<?> cons[] = clazz.getConstructors();
 
         try {
-            return (SimpleDao) cons[0].newInstance(context);
+            return (SimpleDao) cons[0].newInstance(context, db);
         } catch (Exception e) {
             e.printStackTrace();
         }

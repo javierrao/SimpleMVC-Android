@@ -5,15 +5,18 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.android.javier.demo.entities.UserLoginEntity;
 import com.android.javier.simplemvc.db.SimpleDao;
+import com.android.javier.simplemvc.interfaces.INotify;
 import com.android.javier.simplemvc.util.Logger;
+
+import java.util.ArrayList;
 
 /**
  * Created by javier
  */
 public class UserDao extends SimpleDao {
 
-    public UserDao(Context context) {
-        super(context);
+    public UserDao(Context context, SQLiteDatabase database) {
+        super(context, database);
     }
 
     @Override

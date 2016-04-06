@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.javier.simplemvc.interfaces.IDao;
+import com.android.javier.simplemvc.interfaces.INotify;
 
 /**
  * Created by javier on 2016/4/5.
@@ -16,8 +17,9 @@ public abstract class SimpleDao implements IDao {
     protected SQLiteDatabase database;
     protected ContentValues contentValues;
 
-    protected SimpleDao(Context context) {
+    protected SimpleDao(Context context, SQLiteDatabase database) {
         this.context = context;
+        this.database = database;
 
         contentValues = new ContentValues();
     }

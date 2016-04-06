@@ -8,7 +8,6 @@ import android.util.SparseArray;
 
 import com.android.javier.simplemvc.ApplicationContext;
 import com.android.javier.simplemvc.entity.DataSourceEntity;
-import com.android.javier.simplemvc.interfaces.IDao;
 
 /**
  * Created by javier on 2016/4/5.
@@ -61,7 +60,7 @@ public final class SimpleDatabase {
             for (int i = 0; i < daoArray.size(); i++) {
                 key = daoArray.keyAt(i);
 
-                SimpleDao simpleDao = applicationContext.getDao(key);
+                SimpleDao simpleDao = applicationContext.getDao(key, db);
 
                 if (simpleDao != null) {
                     simpleDao.onCreate(db);
@@ -81,7 +80,7 @@ public final class SimpleDatabase {
             for (int i = 0; i < daoArray.size(); i++) {
                 key = daoArray.keyAt(i);
 
-                SimpleDao simpleDao = applicationContext.getDao(key);
+                SimpleDao simpleDao = applicationContext.getDao(key, db);
 
                 if (simpleDao != null) {
                     simpleDao.onUpgrade(db);
