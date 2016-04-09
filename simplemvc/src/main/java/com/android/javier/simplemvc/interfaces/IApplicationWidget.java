@@ -1,12 +1,13 @@
 package com.android.javier.simplemvc.interfaces;
 
 import android.app.Activity;
+import android.app.Service;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 /**
  * Created by javier on 2016/3/27.
- * <p>
+ * <p/>
  * ApplicationWidget的接口，activity和fragment都实现了该接口。提供action操作UI界面的接口
  */
 @SuppressWarnings("unused")

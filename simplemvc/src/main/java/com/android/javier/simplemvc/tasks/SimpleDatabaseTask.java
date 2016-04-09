@@ -24,7 +24,7 @@ public abstract class SimpleDatabaseTask<T> extends SimpleTask {
         super.onPostExecute(result);
 
         if (callback != null) {
-            callback.onDatabaseResult(result, this);
+            callback.onTaskResult(result, this);
         }
     }
 

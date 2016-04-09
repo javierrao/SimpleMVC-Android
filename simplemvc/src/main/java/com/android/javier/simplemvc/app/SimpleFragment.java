@@ -29,12 +29,12 @@ public abstract class SimpleFragment extends Fragment implements IApplicationWid
         applicationContext = ApplicationContext.getApplicationContext(getContext());
     }
 
-    protected void doActionNotify(int notifyResId, Object body) {
-        applicationContext.sendNotify(notifyResId, body, this);
+    protected void doActionNotifyAsync(int notifyResId, Object body) {
+        applicationContext.sendNotifyAsync(notifyResId, body, this);
     }
 
-    protected void doActionNotify(int notifyResId, String... body) {
-        applicationContext.sendNotify(notifyResId, body, this);
+    protected Object doActionNotifySync(int notifyResId, String... body) {
+        return applicationContext.sendNotifySync(notifyResId, body, this);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.android.javier.simplemvc.entity.TaskEntity;
 import com.android.javier.simplemvc.interfaces.ISimpleTaskCallback;
 import com.android.javier.simplemvc.interfaces.IEncrypt;
+import com.android.javier.simplemvc.util.Logger;
 
 /**
  * Created by javier on 2016/3/25.
@@ -15,8 +16,9 @@ import com.android.javier.simplemvc.interfaces.IEncrypt;
 public abstract class SimpleTask extends AsyncTask {
     protected ISimpleTaskCallback callback;
     protected IEncrypt encrypt;
-
     private TaskEntity taskEntity;
+
+    protected Logger logger = Logger.getLogger();
 
     /**
      * 构造方法中获取配置文件中对该task的描述

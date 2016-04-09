@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.android.javier.simplemvc.interfaces.IDao;
 import com.android.javier.simplemvc.interfaces.INotify;
+import com.android.javier.simplemvc.util.Logger;
 
 /**
  * Created by javier on 2016/4/5.
@@ -16,6 +17,7 @@ public abstract class SimpleDao implements IDao {
     protected Context context;
     protected SQLiteDatabase database;
     protected ContentValues contentValues;
+    protected Logger logger = Logger.getLogger();
 
     protected SimpleDao(Context context, SQLiteDatabase database) {
         this.context = context;

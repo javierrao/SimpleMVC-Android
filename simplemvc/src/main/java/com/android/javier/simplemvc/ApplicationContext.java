@@ -24,6 +24,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by javier on 2016/3/26.
@@ -167,13 +168,13 @@ public final class ApplicationContext {
     }
 
     /**
-     * 根据消息ID发送消息
+     * 根据消息ID发送异步消息
      *
      * @param notifyId 消息ID,对应配置在context.xml中的notify的id字段
      * @param body     消息体
      * @param target   消息的发起者
      */
-    public void sendNotify(int notifyId, Object body, IApplicationWidget target) {
+    public void sendNotifyAsync(int notifyId, Object body, IApplicationWidget target) {
         if (!bInit) {
             Logger.getLogger().e("send notify failed. ApplicationContext must be initialization first");
             return;
@@ -196,8 +197,44 @@ public final class ApplicationContext {
 
         if (targetAction != null) {
             targetAction.setApplicationWidget(target);
-            targetAction.doAction(notify);
+            targetAction.doActionAsync(notify);
         }
+    }
+
+    /**
+     * 根据消息ID发送同步消息
+     *
+     * @param notifyId 消息ID,对应配置在context.xml中的notify的id字段
+     * @param body     消息体
+     * @param target   消息的发起者
+     */
+    public Object sendNotifySync(int notifyId, Object body, IApplicationWidget target) {
+        if (!bInit) {
+            Logger.getLogger().e("send notify failed. ApplicationContext must be initialization first");
+            return null;
+        }
+
+        ActionEntity action = findActionByNotifyId(notifyId);
+
+        if (action == null) {
+            Logger.getLogger().e("send notify failed. can not find action by notify name '" + notifyId + "', please check applicationContext xml file.");
+            return null;
+        }
+
+        Notify notify = findNotifyById(notifyId);
+
+        if (notify != null) {
+            notify.setBody(body);
+        }
+
+        IAction targetAction = createAction(action.getName());
+
+        if (targetAction != null) {
+            targetAction.setApplicationWidget(target);
+            return targetAction.doActionSync(notify);
+        }
+
+        return null;
     }
 
     /**

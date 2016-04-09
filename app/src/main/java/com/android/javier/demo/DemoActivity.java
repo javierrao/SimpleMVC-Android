@@ -28,7 +28,7 @@ public class DemoActivity extends SimpleActivity {
         testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doActionNotify(R.id.ids_notify_user_login, "username", "password");
+                doActionNotifyAsync(R.id.ids_notify_user_login, "username", "password");
             }
         });
     }

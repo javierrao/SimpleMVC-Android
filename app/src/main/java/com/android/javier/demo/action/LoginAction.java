@@ -6,7 +6,6 @@ import com.android.javier.demo.R;
 import com.android.javier.demo.dao.UserDao;
 import com.android.javier.demo.entities.UserLoginEntity;
 import com.android.javier.simplemvc.action.SimpleAction;
-import com.android.javier.simplemvc.tasks.SimpleDatabaseTask;
 import com.android.javier.simplemvc.tasks.SimpleNetworkTask;
 import com.android.javier.simplemvc.util.Logger;
 import com.android.javier.simplemvc.interfaces.INotify;
@@ -23,7 +22,7 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
     }
 
     @Override
-    public void doAction(INotify notify) {
+    public void doActionAsync(INotify notify) {
         if (notify.getId() == R.id.ids_notify_user_login) {
             String[] body = (String[]) notify.getBody();
 
@@ -60,7 +59,7 @@ public class LoginAction extends SimpleAction<UserLoginEntity> {
     }
 
     @Override
-    public void onDatabaseResult(UserLoginEntity result, SimpleTask target) {
+    public void onTaskResult(UserLoginEntity result, SimpleTask target) {
 
     }
 }

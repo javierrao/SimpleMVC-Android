@@ -1,6 +1,8 @@
 package com.android.javier.simplemvc.action;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Message;
 
 import com.android.javier.simplemvc.ApplicationContext;
 import com.android.javier.simplemvc.interfaces.IApplicationWidget;
@@ -13,14 +15,16 @@ import com.android.javier.simplemvc.tasks.SimpleNetworkTask;
 import com.android.javier.simplemvc.tasks.SimpleTask;
 import com.android.javier.simplemvc.interfaces.ISimpleTaskCallback;
 import com.android.javier.simplemvc.tasks.TaskManager;
+import com.android.javier.simplemvc.util.Logger;
 
 @SuppressWarnings("unused ")
 public abstract class SimpleAction<T> implements IAction, ISimpleTaskCallback<T> {
-    protected INotify notify;
     protected IApplicationWidget applicationWidget;
     protected Context context;
     protected ApplicationContext applicationContext;
     protected TaskManager taskManager;
+
+    protected Logger logger = Logger.getLogger();
 
     protected SimpleAction(Context context) {
         this.context = context;
@@ -30,8 +34,12 @@ public abstract class SimpleAction<T> implements IAction, ISimpleTaskCallback<T>
     }
 
     @Override
-    public void doAction(INotify notify) {
-        this.notify = notify;
+    public Object doActionSync(INotify notify) {
+        return null;
+    }
+
+    @Override
+    public void doActionAsync(INotify notify) {
     }
 
     public void setApplicationWidget(IApplicationWidget applicationWidget) {

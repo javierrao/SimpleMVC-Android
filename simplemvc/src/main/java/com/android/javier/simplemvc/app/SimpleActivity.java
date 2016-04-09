@@ -26,12 +26,24 @@ public abstract class SimpleActivity extends Activity implements IApplicationWid
         applicationContext = ApplicationContext.getApplicationContext(getApplicationContext());
     }
 
-    protected void doActionNotify(int notifyResId, Object body) {
-        applicationContext.sendNotify(notifyResId, body, this);
+    /**
+     * 发送同步action消息
+     *
+     * @param notifyResId 消息ID
+     * @param body        消息内容
+     */
+    protected Object doActionNotifySync(int notifyResId, Object body) {
+        return applicationContext.sendNotifySync(notifyResId, body, this);
     }
 
-    protected void doActionNotify(int notifyResId, String... body) {
-        applicationContext.sendNotify(notifyResId, body, this);
+    /**
+     * 发送异步action消息
+     *
+     * @param notifyResId 消息ID
+     * @param body        消息内容
+     */
+    protected void doActionNotifyAsync(int notifyResId, Object body) {
+        applicationContext.sendNotifyAsync(notifyResId, body, this);
     }
 
     @Override
