@@ -27,23 +27,40 @@ public abstract class SimpleActivity extends Activity implements IApplicationWid
     }
 
     /**
-     * 发送同步action消息
+     * 发送同步无参action消息
      *
      * @param notifyResId 消息ID
-     * @param body        消息内容
      */
-    protected Object doActionNotifySync(int notifyResId, Object body) {
-        return applicationContext.sendNotifySync(notifyResId, body, this);
+    protected Object doActionNotifySync(int notifyResId) {
+        return applicationContext.sendNotifySync(notifyResId, null, this);
     }
 
     /**
-     * 发送异步action消息
+     * 发送同步有参action消息
+     * @param notifyResId 消息ID
+     * @param body 参数
+     * @return
+     */
+    protected Object doActionNotifySync(int notifyResId, Object... body) {
+        return doActionNotifySync(notifyResId, body, this);
+    }
+
+    /**
+     * 发送异步无参action消息
      *
      * @param notifyResId 消息ID
-     * @param body        消息内容
      */
-    protected void doActionNotifyAsync(int notifyResId, Object body) {
-        applicationContext.sendNotifyAsync(notifyResId, body, this);
+    protected void doActionNotifyAsync(int notifyResId) {
+        applicationContext.sendNotifyAsync(notifyResId, null, this);
+    }
+
+    /**
+     * 发送异步无参action消息
+     * @param notifyResId 消息ID
+     * @param body 参数
+     */
+    protected void doActionNotifyAsync(int notifyResId, Object... body) {
+        doActionNotifyAsync(notifyResId, body, this);
     }
 
     @Override
