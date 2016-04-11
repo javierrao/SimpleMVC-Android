@@ -29,8 +29,8 @@ public abstract class SimpleFragment extends Fragment implements IApplicationWid
         applicationContext = ApplicationContext.getApplicationContext(getContext());
     }
 
-    protected void doActionNotifyAsync(int notifyResId, Object body) {
-        applicationContext.sendNotifyAsync(notifyResId, body, this);
+    protected void doActionNotifyAsync(int notifyResId) {
+        applicationContext.sendNotifyAsync(notifyResId, null, this);
     }
 
     protected Object doActionNotifySync(int notifyResId, String... body) {
