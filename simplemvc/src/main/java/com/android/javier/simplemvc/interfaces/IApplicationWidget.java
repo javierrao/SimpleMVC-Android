@@ -7,7 +7,7 @@ import android.view.View;
 
 /**
  * Created by javier on 2016/3/27.
- * <p/>
+ * <p>
  * ApplicationWidget的接口，activity和fragment都实现了该接口。提供action操作UI界面的接口
  */
 @SuppressWarnings("unused")
@@ -19,6 +19,14 @@ public interface IApplicationWidget {
      * @param action 回调的action
      */
     void handleNotify(INotify notify, IAction action);
+
+    /**
+     * 回调消息到UI
+     *
+     * @param notify 发送消息
+     * @param action 回调的action
+     */
+    void handleNotify(int notify, IAction action);
 
     /**
      * 提供在action中通过id查找UI的view

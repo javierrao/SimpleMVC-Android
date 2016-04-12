@@ -13,6 +13,8 @@ public class SimpleApplication extends Application {
 
     protected ApplicationContext applicationContext;
 
+    private Logger logger = null;
+
     public SimpleApplication() {
         applicationContext = ApplicationContext.getApplicationContext(this);
     }
@@ -27,6 +29,8 @@ public class SimpleApplication extends Application {
 
     protected void initLogger(String tag, String applicationName, String logfileName, boolean debug) {
         Logger.initLogger(tag, applicationName, logfileName, debug);
+
+        logger = Logger.getLogger();
     }
 
     @Override

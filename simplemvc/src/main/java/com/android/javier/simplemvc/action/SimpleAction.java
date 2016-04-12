@@ -1,19 +1,17 @@
 package com.android.javier.simplemvc.action;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Message;
 
 import com.android.javier.simplemvc.ApplicationContext;
-import com.android.javier.simplemvc.interfaces.IApplicationWidget;
 import com.android.javier.simplemvc.interfaces.IAction;
+import com.android.javier.simplemvc.interfaces.IApplicationWidget;
 import com.android.javier.simplemvc.interfaces.IDao;
 import com.android.javier.simplemvc.interfaces.INotify;
+import com.android.javier.simplemvc.interfaces.ISimpleTaskCallback;
 import com.android.javier.simplemvc.net.ErrorEntity;
 import com.android.javier.simplemvc.tasks.SimpleDatabaseTask;
 import com.android.javier.simplemvc.tasks.SimpleNetworkTask;
 import com.android.javier.simplemvc.tasks.SimpleTask;
-import com.android.javier.simplemvc.interfaces.ISimpleTaskCallback;
 import com.android.javier.simplemvc.tasks.TaskManager;
 import com.android.javier.simplemvc.util.Logger;
 
@@ -47,6 +45,12 @@ public abstract class SimpleAction<T> implements IAction, ISimpleTaskCallback<T>
     }
 
     protected void notifyApplicationWidget(INotify notify) {
+        if (applicationWidget != null) {
+            applicationWidget.handleNotify(notify, this);
+        }
+    }
+
+    protected void notifyApplicationWidget(int notify) {
         if (applicationWidget != null) {
             applicationWidget.handleNotify(notify, this);
         }

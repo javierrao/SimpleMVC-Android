@@ -5,12 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.android.javier.simplemvc.ApplicationContext;
+import com.android.javier.simplemvc.interfaces.IAction;
 import com.android.javier.simplemvc.interfaces.IApplicationWidget;
+import com.android.javier.simplemvc.interfaces.INotify;
+import com.android.javier.simplemvc.util.Logger;
 
 @SuppressWarnings("unused")
 public abstract class SimpleActivity extends Activity implements IApplicationWidget {
 
     protected ApplicationContext applicationContext;
+
+    protected Logger logger = Logger.getLogger();
 
     @Override
     public void setContentView(int layoutResID) {
@@ -76,6 +81,16 @@ public abstract class SimpleActivity extends Activity implements IApplicationWid
     @Override
     public Fragment getFragment() {
         return null;
+    }
+
+    @Override
+    public void handleNotify(INotify notify, IAction action) {
+
+    }
+
+    @Override
+    public void handleNotify(int notify, IAction action) {
+
     }
 
     protected abstract void initView();
