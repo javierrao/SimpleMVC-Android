@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 资源文件说明：
 ${}：标识引用系统的ID资源，且id资源必须为引用系统的ID资源
 
@@ -28,20 +27,30 @@ dao id：dao的唯一标识，引用系统ID资源
 dao name：dao类全路径，该类必须实现SimpleDao的子类，否则无法创建
 -->
 <application-context>
+    <debug>true</debug>
+
     <!-- action 配置 -->
     <action-config>
-        <action id="${ids_action_user_login}" name="com.android.javier.demo.action.LoginAction">
-            <notify id="${ids_notify_user_login}" name="execute_user_login"/>
+        <action name="com.android.javier.demo.action.LoginAction" id="${ids_action_user_login}">
+            <notify name="execute_user_login" id="${ids_notify_user_login}" />
         </action>
     </action-config>
 
     <!-- 任务配置 -->
     <task-config>
-        <task id="${ids_task_user_login}" name="com.android.javier.demo.tasks.LoginTask">
+        <task name="com.android.javier.demo.tasks.LoginTask" id="${ids_task_user_login}">
             <type>http</type>
             <meta-data>json</meta-data>
         </task>
     </task-config>
+
+    <!-- log配置 -->
+    <logger>
+        <tag></tag>
+        <filename></filename>
+        <reportUrl></reportUrl>
+        <report_when_crash></report_when_crash>
+    </logger>
 
     <!-- 数据源配置 -->
     <dataSource>
@@ -49,7 +58,22 @@ dao name：dao类全路径，该类必须实现SimpleDao的子类，否则无法
         <version>1</version>
         <backup_when_need_upgrade>true</backup_when_need_upgrade>
         <dao-config>
-            <dao id="${ids_dao_user}" name="com.android.javier.demo.dao.UserDao" />
+            <dao name="com.android.javier.demo.dao.UserDao" id="${ids_dao_user}" />
         </dao-config>
     </dataSource>
+
+    <!-- 网络资源配置 -->
+    <networkSource>
+        <domain>
+            <release>www.hongbaok.com</release>
+            <debug>www.hongbaok.com</debug>
+        </domain>
+
+        <oss>
+        </oss>
+
+        <module name="redpacket/usercenter">
+            <uri id="userlogin" method="post" protocol="http">userlogin</uri>
+        </module>
+    </networkSource>
 </application-context>
