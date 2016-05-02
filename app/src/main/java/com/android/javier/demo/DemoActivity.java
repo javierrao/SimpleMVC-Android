@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.android.javier.simplemvc.app.SimpleActivity;
-import com.android.javier.simplemvc.interfaces.IAction;
-import com.android.javier.simplemvc.interfaces.INotify;
+import com.android.javier.demo.command.LoginCommand;
+import com.javier.simplemvc.app.SimpleActivity;
 
 public class DemoActivity extends SimpleActivity {
 
@@ -19,27 +18,36 @@ public class DemoActivity extends SimpleActivity {
     }
 
     @Override
-    protected void initView() {
+    public void initView() {
         testbtn = (Button) findViewById(R.id.testbtn);
     }
 
     @Override
-    protected void setEventListener() {
+    public void addEventListener() {
         testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doActionNotifyAsync(R.id.ids_notify_user_login, "username", "password");
+                sendNotifyMessage(R.integer.msg_commit_login, "13235687640", "123456");
             }
         });
     }
 
     @Override
-    protected void prepareComplete() {
+    public void onInitComplete() {
 
     }
 
     @Override
-    public void handleNotify(INotify notify, IAction action) {
+    public void initCommand() {
+        super.initCommand();
 
+        registerCommand(LoginCommand.class);
+    }
+
+    @Override
+    public void removeCommand() {
+        super.removeCommand();
+
+        removeCommand(LoginCommand.class);
     }
 }

@@ -4,8 +4,8 @@ package com.android.javier.demo.entities;
  * Created by javier
  */
 public class UserLoginEntity {
+    private int id;
     private String account;
-    private String password;
 
     public String getAccount() {
         return account;
@@ -15,11 +15,11 @@ public class UserLoginEntity {
         this.account = account;
     }
 
-    public String getPassword() {
-        return password;
+    public int getId() {
+        return id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setId(int id) {
+        this.id = id;
     }
 }

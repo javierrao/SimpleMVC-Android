@@ -4,11 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.javier.demo.entities.UserLoginEntity;
-import com.android.javier.simplemvc.db.SimpleDao;
-import com.android.javier.simplemvc.interfaces.INotify;
-import com.android.javier.simplemvc.util.Logger;
-
-import java.util.ArrayList;
+import com.javier.simplemvc.dao.SimpleDao;
 
 /**
  * Created by javier
@@ -20,22 +16,22 @@ public class UserDao extends SimpleDao {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        String user_sql = "CREATE TABLE IF NOT EXISTS user (account TEXT, password TEXT)";
-        db.execSQL(user_sql);
+    public void onCreate(SQLiteDatabase database) {
+        String user_sql = "CREATE TABLE IF NOT EXISTS user (account TEXT, id INTEGER)";
+        database.execSQL(user_sql);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE user");
-        onCreate(db);
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        database.execSQL("DROP TABLE user");
+        onCreate(database);
     }
 
     public void createUser(UserLoginEntity entity) {
         contentValues.clear();
 
         contentValues.put("account", entity.getAccount());
-        contentValues.put("password", entity.getPassword());
+        contentValues.put("id", entity.getId());
         database.insert("user", null, contentValues);
     }
 }

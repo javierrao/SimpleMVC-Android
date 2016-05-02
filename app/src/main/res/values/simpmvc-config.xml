@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- action id 配置 -->
+    <!-- action id -->
     <item name="ids_action_user_login" type="id"/>
-    <!-- notify id 配置 -->
-    <item name="ids_notify_user_login" type="id" />
-    <!-- task id 配置 -->
-    <item name="ids_task_user_login" type="id" />
-    <!-- 异步操作数据库的task -->
-    <item name="ids_task_set_user" type="id" />
-    <!-- dao id 配置 -->
+    <!-- dao id -->
     <item name="ids_dao_user" type="id" />
+    <!-- task id -->
+    <item name="ids_task_user_login" type="id" />
+    <!-- mediator id -->
+    <item name="ids_login_mediator" type="id" />
+
+
+    <integer name="msg_commit_login">1</integer>
+    <integer name="msg_login_success">2</integer>
+    <integer name="msg_login_failed">3</integer>
 </resources>
