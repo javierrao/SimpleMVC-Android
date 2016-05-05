@@ -2,7 +2,9 @@ package com.android.javier.demo.tasks;
 
 import com.android.javier.demo.R;
 import com.android.javier.demo.entities.UserLoginEntity;
+import com.javier.simplemvc.interfaces.ITaskCallback;
 import com.javier.simplemvc.modules.task.SimpleNetTask;
+import com.javier.simplemvc.net.ErrorEntity;
 import com.javier.simplemvc.net.ResponseEntity;
 
 import org.json.JSONObject;
@@ -10,11 +12,13 @@ import org.json.JSONObject;
 /**
  * Created by javier
  */
-public class LoginTask extends SimpleNetTask {
-    @Override
-    protected void handlerResponse(ResponseEntity responseEntity) {
-        super.handlerResponse(responseEntity);
+public class LoginTask extends SimpleNetTask<UserLoginEntity> {
+    public LoginTask(ITaskCallback callback) {
+        super(callback);
+    }
 
+    @Override
+    protected UserLoginEntity onResponse(ResponseEntity responseEntity) throws Exception {
         try {
             JSONObject jsonObject = new JSONObject(responseEntity.getContent());
 
@@ -22,15 +26,16 @@ public class LoginTask extends SimpleNetTask {
             entity.setId(jsonObject.getInt("id"));
             entity.setAccount(jsonObject.getString("account"));
 
-            sendNotifyMessage(R.integer.msg_login_success, entity);
+            return entity;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return super.onResponse(responseEntity);
     }
 
     @Override
-    protected void handlerError(ResponseEntity responseEntity) {
-        super.handlerError(responseEntity);
-        sendNotifyMessage(R.integer.msg_login_failed, responseEntity.getContent());
+    protected ErrorEntity onResponseError(ResponseEntity responseEntity) {
+        return super.onResponseError(responseEntity);
     }
 }

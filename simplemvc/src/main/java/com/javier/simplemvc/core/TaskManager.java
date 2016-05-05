@@ -4,10 +4,14 @@ import android.os.AsyncTask;
 import android.util.SparseArray;
 
 import com.javier.simplemvc.dao.SimpleDatabase;
-import com.javier.simplemvc.net.RequestEntity;
+import com.javier.simplemvc.interfaces.IEncrypt;
+import com.javier.simplemvc.interfaces.ITaskCallback;
 import com.javier.simplemvc.modules.task.SimpleDatabaseTask;
 import com.javier.simplemvc.modules.task.SimpleTask;
+import com.javier.simplemvc.net.RequestEntity;
 import com.javier.simplemvc.utils.Logger;
+
+import java.lang.reflect.Constructor;
 
 /**
  * author:Javier
@@ -15,19 +19,24 @@ import com.javier.simplemvc.utils.Logger;
  * mail:38244704@qq.com
  */
 @SuppressWarnings("unused, unchecked")
-public final class Task {
+public final class TaskManager {
     private static final Logger logger = Logger.getLogger();
 
-    private static Task task;
+    private static TaskManager task;
 
-    private SparseArray<Class<?>> taskSparseArray = new SparseArray<>();
+    private SparseArray<TaskMap> taskSparseArray = new SparseArray<>();
 
     private SparseArray<SimpleTask> executeTasks = new SparseArray<>();
 
+    class TaskMap {
+        Class taskClass;
+        ITaskCallback callback;
+        IEncrypt encrypt;
+    }
 
-    public synchronized static Task getInstance() {
+    public synchronized static TaskManager getInstance() {
         if (task == null)
-            task = new Task();
+            task = new TaskManager();
 
         return task;
     }
@@ -38,8 +47,21 @@ public final class Task {
      * @param taskId    task id
      * @param taskClass task class 对象
      */
-    public void registerTask(int taskId, Class<?> taskClass) {
-        taskSparseArray.put(taskId, taskClass);
+    public void registerTask(int taskId, Class<?> taskClass, ITaskCallback callback) {
+        TaskMap taskMap = new TaskMap();
+        taskMap.taskClass = taskClass;
+        taskMap.callback = callback;
+
+        taskSparseArray.put(taskId, taskMap);
+    }
+
+    public void registerTask(int taskId, Class<?> taskClass, ITaskCallback callback, IEncrypt encrypt) {
+        TaskMap taskMap = new TaskMap();
+        taskMap.taskClass = taskClass;
+        taskMap.callback = callback;
+        taskMap.encrypt = encrypt;
+
+        taskSparseArray.put(taskId, taskMap);
     }
 
     /**
@@ -49,15 +71,21 @@ public final class Task {
      * @return task
      */
     public SimpleTask retrieveTask(int taskId) {
-        Class<?> taskClass = taskSparseArray.get(taskId);
+        TaskMap taskMap = taskSparseArray.get(taskId);
 
-        if (taskClass == null) {
+        if (taskMap.taskClass == null) {
             logger.e("can not found class by id " + taskId);
             return null;
         }
 
         try {
-            return (SimpleTask) taskClass.newInstance();
+            Constructor[] cons = taskMap.taskClass.getConstructors();
+
+            if (taskMap.encrypt == null) {
+                return (SimpleTask) cons[1].newInstance(taskMap.callback);
+            }
+
+            return (SimpleTask) cons[2].newInstance(taskMap.callback, taskMap.encrypt);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import com.android.javier.demo.command.LoginCommand;
 import com.javier.simplemvc.app.SimpleActivity;
+import com.javier.simplemvc.modules.notify.NotifyMessage;
 
 public class DemoActivity extends SimpleActivity {
 
@@ -39,15 +40,21 @@ public class DemoActivity extends SimpleActivity {
 
     @Override
     public void initCommand() {
-        super.initCommand();
-
         registerCommand(LoginCommand.class);
     }
 
     @Override
     public void removeCommand() {
-        super.removeCommand();
-
         removeCommand(LoginCommand.class);
+    }
+
+    @Override
+    public int[] listMessage() {
+        return new int[0];
+    }
+
+    @Override
+    public void handlerMessage(NotifyMessage message) {
+
     }
 }

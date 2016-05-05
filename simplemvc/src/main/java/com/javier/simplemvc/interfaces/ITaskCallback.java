@@ -27,11 +27,4 @@ public interface ITaskCallback<T> {
      * @param target 调用者
      */
     void onFailed(int code, ErrorEntity error, SimpleTask target);
-
-    /**
-     * 异步执行数据库操作或其他自定义操作后返回
-     * @param result    返回的结果
-     * @param target    调用者
-     */
-    void onTaskResult(T result, SimpleTask target);
 }

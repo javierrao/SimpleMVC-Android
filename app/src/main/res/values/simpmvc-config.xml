@@ -6,6 +6,7 @@
     <item name="ids_dao_user" type="id" />
     <!-- task id -->
     <item name="ids_task_user_login" type="id" />
+    <item name="ids_task_query_user" type="id" />
     <!-- mediator id -->
     <item name="ids_login_mediator" type="id" />
 

@@ -3,7 +3,7 @@ package com.javier.simplemvc;
 import android.content.Context;
 import android.util.SparseArray;
 
-import com.javier.simplemvc.core.Observer;
+import com.javier.simplemvc.modules.notify.Observer;
 import com.javier.simplemvc.dao.SimpleDatabase;
 import com.javier.simplemvc.interfaces.IDao;
 import com.javier.simplemvc.modules.notify.NotifyMessage;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * time:2016/4/30.
  * mail:38244704@qq.com
  */
+@SuppressWarnings("unchecked,unused")
 public final class SimpleContext {
 
     private static final Logger logger = Logger.getLogger();
@@ -59,7 +60,7 @@ public final class SimpleContext {
     /**
      * 获取DAO
      *
-     * @param daoId
+     * @param daoId dao id
      * @return 获取dao对象
      */
     public IDao getDao(int daoId) {
@@ -76,9 +77,7 @@ public final class SimpleContext {
 
         try {
             Constructor<IDao>[] cons = daoClass.getConstructors();
-            IDao dao = cons[0].newInstance(context, SimpleDatabase.getSimpleDatabase().open());
-
-            return dao;
+            return cons[0].newInstance(context, SimpleDatabase.getSimpleDatabase().open());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,59 +1,63 @@
 package com.javier.simplemvc.modules.command;
 
-import com.javier.simplemvc.SimpleContext;
-import com.javier.simplemvc.core.Task;
-import com.javier.simplemvc.core.View;
+import com.javier.simplemvc.core.TaskManager;
 import com.javier.simplemvc.interfaces.ICommand;
 import com.javier.simplemvc.interfaces.IDao;
-import com.javier.simplemvc.interfaces.IDisplay;
-import com.javier.simplemvc.interfaces.IMediator;
+import com.javier.simplemvc.interfaces.IEncrypt;
+import com.javier.simplemvc.interfaces.ITaskCallback;
+import com.javier.simplemvc.modules.SimpleModule;
 import com.javier.simplemvc.modules.task.SimpleTask;
+import com.javier.simplemvc.utils.Logger;
 
 /**
  * author:Javier
  * time:2016/4/30.
  * mail:38244704@qq.com
- * <p/>
+ * <p>
  * command的父类，实现了ICommand接口，并封装了command类所用到的公用方法
  */
-public abstract class SimpleCommand implements ICommand {
-    /**
-     * 显示调用接口
-     */
-    protected IDisplay display;
-
+@SuppressWarnings("unused")
+public abstract class SimpleCommand extends SimpleModule implements ICommand {
     /**
      * 任务task
      */
-    protected Task task;
-
-    protected View view;
-
-    protected SimpleContext simpleContext;
+    protected TaskManager taskManager;
+    /**
+     * 日志
+     */
+    protected Logger logger = Logger.getLogger();
 
     /**
      * 构造函数，通过传入显示接口初始化command对象
-     *
-     * @param display 显示接口对象
      */
-    protected SimpleCommand(IDisplay display) {
-        this.display = display;
-        this.task = Task.getInstance();
-        this.simpleContext = SimpleContext.getInstance();
-        this.view = View.getInstance();
+    protected SimpleCommand() {
+        super();
+        taskManager = TaskManager.getInstance();
 
         initTask();
-        initMediator();
     }
 
     /**
-     * 通过调用task中的注册方法来注册task
+     * 注册task,并且在数据发送和接收的时候需要通过调用加密接口进行加解密
      *
-     * @param taskId taskId
-     * @param task   task class 对象
+     * @param taskId    task id
+     * @param taskClass task class
+     * @param callback  回调接口对象
+     * @param encrypt   加密接口对象
      */
-    protected void registerTask(int taskId, Class<?> task) {
-        this.task.registerTask(taskId, task);
+    protected void registerTask(int taskId, Class<?> taskClass, ITaskCallback callback, IEncrypt encrypt) {
+        this.taskManager.registerTask(taskId, taskClass, callback, encrypt);
+    }
+
+    /**
+     * 注册task
+     *
+     * @param taskId    task id
+     * @param taskClass task class对象
+     * @param callback  回调接口对象
+     */
+    protected void registerTask(int taskId, Class<?> taskClass, ITaskCallback callback) {
+        taskManager.registerTask(taskId, taskClass, callback);
     }
 
     /**
@@ -63,25 +67,7 @@ public abstract class SimpleCommand implements ICommand {
      * @return SimpleTask对象
      */
     protected SimpleTask retrieveTask(int taskId) {
-        return this.task.retrieveTask(taskId);
-    }
-
-    /**
-     * 注册mediator对象
-     *
-     * @param mediator 需要注册的mediator对象
-     */
-    protected void registerMediator(IMediator mediator) {
-        view.registerMediator(mediator);
-    }
-
-    /**
-     * 注销mediator
-     *
-     * @param mediatorId 需要注销的mediator对象ID
-     */
-    protected void removeMediator(int mediatorId) {
-        view.removeMediator(mediatorId);
+        return taskManager.retrieveTask(taskId);
     }
 
     /**
@@ -90,14 +76,14 @@ public abstract class SimpleCommand implements ICommand {
      * @param taskId 需要移除的task id
      */
     protected void removeTask(int taskId) {
-        task.removeTask(taskId);
+        taskManager.removeTask(taskId);
     }
 
     /**
      * 移除所有task
      */
     protected void removeAllTask() {
-        task.removeAllTask();
+        taskManager.removeAllTask();
     }
 
     /**
@@ -119,14 +105,4 @@ public abstract class SimpleCommand implements ICommand {
     public void onRegister() {
 
     }
-
-    /**
-     * 初始化task, 初始化在command需要用到的task，在子类中实现
-     */
-    protected abstract void initTask();
-
-    /**
-     * 初始化mediator，初始化在command需要用到的mediator,在子类中实现
-     */
-    protected abstract void initMediator();
 }

@@ -1,57 +1,40 @@
 package com.javier.simplemvc.app;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.javier.simplemvc.SimpleContext;
-import com.javier.simplemvc.core.Controller;
+import com.javier.simplemvc.core.ModuleManager;
 import com.javier.simplemvc.interfaces.IAppWidget;
-import com.javier.simplemvc.interfaces.IDisplay;
 import com.javier.simplemvc.modules.notify.NotifyMessage;
+import com.javier.simplemvc.utils.Logger;
 
 /**
  * author:Javier
  * time:2016/4/30.
  * mail:38244704@qq.com
  */
-public abstract class SimpleActivity extends FragmentActivity implements IDisplay, IAppWidget {
+@SuppressWarnings("unused")
+public abstract class SimpleActivity extends FragmentActivity implements IAppWidget {
+
+    protected Logger logger = Logger.getLogger();
 
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
 
+        init();
         initView();
-        addEventListener();
         initCommand();
+        addEventListener();
         onInitComplete();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        removeCommand();
+    private void init() {
+        ModuleManager.getModuleManager().registerModule(this);
     }
 
-    @Override
-    public Activity getActivity() {
-        return this;
-    }
-
-    @Override
-    public Fragment getFragment() {
-        return null;
-    }
-
-    @Override
-    public Context getContext() {
-        return getApplicationContext();
-    }
-
-    protected void registerCommand(Class<?> commandClass) {
-        Controller.getInstance().registerCommand(commandClass, this);
+    protected void registerCommand(Class commandClass) {
+        ModuleManager.getModuleManager().registerModule(commandClass);
     }
 
     protected void sendNotifyMessage(NotifyMessage message) {
@@ -67,16 +50,23 @@ public abstract class SimpleActivity extends FragmentActivity implements IDispla
     }
 
     protected void removeCommand(Class commandClass) {
-        Controller.getInstance().removeCommand(commandClass);
+        ModuleManager.getModuleManager().removeModule(commandClass);
     }
 
     @Override
-    public void initCommand() {
-        
+    public void onRemove() {
+
     }
 
     @Override
-    public void removeCommand() {
+    public void onRegister() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ModuleManager.getModuleManager().removeModule(this);
     }
 }

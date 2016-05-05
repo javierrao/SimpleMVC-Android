@@ -1,4 +1,4 @@
-package com.javier.simplemvc.core;
+package com.javier.simplemvc.modules.notify;
 
 import android.os.Message;
 

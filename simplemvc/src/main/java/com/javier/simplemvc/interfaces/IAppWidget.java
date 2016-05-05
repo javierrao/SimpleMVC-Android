@@ -5,10 +5,10 @@ package com.javier.simplemvc.interfaces;
  * time:2016/5/1.
  * mail:38244704@qq.com
  */
-public interface IAppWidget {
+public interface IAppWidget extends IModule {
     void initView();
+    void initCommand();
     void addEventListener();
     void onInitComplete();
-    void initCommand();
     void removeCommand();
 }

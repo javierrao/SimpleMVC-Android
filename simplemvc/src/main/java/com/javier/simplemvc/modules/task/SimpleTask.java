@@ -1,13 +1,13 @@
 package com.javier.simplemvc.modules.task;
 
 import android.os.AsyncTask;
-import android.os.Message;
 
 import com.javier.simplemvc.SimpleContext;
-import com.javier.simplemvc.core.Task;
+import com.javier.simplemvc.core.TaskManager;
 import com.javier.simplemvc.interfaces.IEncrypt;
 import com.javier.simplemvc.interfaces.ITaskCallback;
 import com.javier.simplemvc.modules.notify.NotifyMessage;
+import com.javier.simplemvc.utils.Logger;
 
 /**
  * author:Javier
@@ -19,27 +19,21 @@ public abstract class SimpleTask extends AsyncTask {
 
     protected int taskId;
     protected IEncrypt encrypt;
+    protected ITaskCallback callback;
 
-    protected SimpleContext simpleContext;
+    protected Logger logger = Logger.getLogger();
 
-    public SimpleTask() {
-        simpleContext = SimpleContext.getInstance();
+    protected SimpleTask(ITaskCallback callback) {
+        this.callback = callback;
     }
 
-    protected void sendNotifyMessage(NotifyMessage message) {
-        simpleContext.notifyObservers(message);
-    }
-
-    protected void sendNotifyMessage(int what, Object... param) {
-        simpleContext.notifyObservers(new NotifyMessage(what, param));
-    }
-
-    protected void sendNotifyMessage(int what, Object param) {
-        SimpleContext.getInstance().notifyObservers(new NotifyMessage(what, param));
+    protected SimpleTask(ITaskCallback callback, IEncrypt encrypt) {
+        this.callback = callback;
+        this.encrypt = encrypt;
     }
 
     protected void release() {
-        Task.getInstance().removeTask(taskId);
+        TaskManager.getInstance().removeTask(taskId);
     }
 
     public int getTaskId() {

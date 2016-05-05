@@ -1,20 +1,13 @@
 package com.javier.simplemvc.interfaces;
 
-import android.os.Message;
-
-import com.javier.simplemvc.modules.notify.NotifyMessage;
-
 /**
  * author:Javier
  * time:2016/4/30.
  * mail:38244704@qq.com
  */
-public interface ICommand {
-    void execute(NotifyMessage message);
-
-    int[] listMessage();
-
-    void onRemove();
-
-    void onRegister();
+public interface ICommand extends IModule {
+    /**
+     * 初始化task, 初始化在command需要用到的task，在子类中实现
+     */
+    void initTask();
 }

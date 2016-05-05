@@ -17,6 +17,10 @@ public class NotifyMessage {
 
     }
 
+    public NotifyMessage(int what) {
+        this.what = what;
+    }
+
     public NotifyMessage(int what, Object... param) {
         this.what = what;
         this.params = param;

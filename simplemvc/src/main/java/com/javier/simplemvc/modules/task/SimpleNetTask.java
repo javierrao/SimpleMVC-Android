@@ -1,5 +1,7 @@
 package com.javier.simplemvc.modules.task;
 
+import com.javier.simplemvc.interfaces.IEncrypt;
+import com.javier.simplemvc.interfaces.ITaskCallback;
 import com.javier.simplemvc.net.ErrorEntity;
 import com.javier.simplemvc.net.RequestEntity;
 import com.javier.simplemvc.net.ResponseEntity;
@@ -17,14 +19,25 @@ public abstract class SimpleNetTask<T> extends SimpleTask {
 
     protected SimpleHttp httpSvr;
 
+    protected SimpleNetTask(ITaskCallback callback) {
+        super(callback);
+    }
+
+    protected SimpleNetTask(ITaskCallback callback, IEncrypt encrypt) {
+        super(callback, encrypt);
+    }
+
     @Override
     protected Object doInBackground(Object[] params) {
         RequestEntity requestEntity = (RequestEntity) params[0];
 
         String param = requestEntity.getContent();
 
-        if (requestEntity.getEncrypt() == 1) {
+        if (requestEntity.getEncrypt() == 1 && getEncrypt() != null) {
             param = getEncrypt().encrypt(param);
+        } else {
+            logger.e("this request must be encrypt but IEncrypt object is null. Please use IEncrypt object to register task");
+            return null;
         }
 
         httpSvr = new SimpleHttp();
@@ -53,6 +66,10 @@ public abstract class SimpleNetTask<T> extends SimpleTask {
 
     @Override
     protected void onPostExecute(Object o) {
+        if (o == null) {
+            return;
+        }
+
         ResponseEntity responseEntity = (ResponseEntity) o;
         RequestEntity requestEntity = (RequestEntity) responseEntity.getTag();
 
@@ -65,12 +82,12 @@ public abstract class SimpleNetTask<T> extends SimpleTask {
                     responseEntity.setContent(resultContent);
                 }
 
-//                if (null != callback) {
-//                    T t = onResponse(responseEntity);
-//                    callback.onResult(responseEntity.getResponseCode(), t, this);
-//                }
-
-                handlerResponse(responseEntity);
+                if (null != callback) {
+                    T t = onResponse(responseEntity);
+                    callback.onResult(responseEntity.getResponseCode(), t, this);
+                } else {
+                    logger.e("task callback object is null.");
+                }
 
             } else {
                 if (requestEntity.getEncrypt() == 1) {
@@ -81,26 +98,24 @@ public abstract class SimpleNetTask<T> extends SimpleTask {
                 responseEntity.setContent(resultContent);
                 ErrorEntity error = onResponseError(responseEntity);
 
-//                if (null != callback) {
-//                    callback.onFailed(responseEntity.getResponseCode(), error, this);
-//                }
-
-                handlerError(responseEntity);
+                if (null != callback) {
+                    callback.onFailed(responseEntity.getResponseCode(), error, this);
+                } else {
+                    logger.e("task callback object is null.");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
 
-//            ErrorEntity errorEntity = new ErrorEntity();
-//            errorEntity.setCode(500);
-//            errorEntity.setMessage("客户端应用内部错误");
+            ErrorEntity errorEntity = new ErrorEntity();
+            errorEntity.setCode(5000);
+            errorEntity.setMessage("客户端应用内部错误");
 
-//            if (callback != null) {
-//                callback.onFailed(errorEntity.getCode(), errorEntity, this);
-//            }
-
-            responseEntity.setResponseCode(500);
-            responseEntity.setContent("客户端应用内部错误");
-            handlerError(responseEntity);
+            if (callback != null) {
+                callback.onFailed(errorEntity.getCode(), errorEntity, this);
+            } else {
+                logger.e("onPostExecute exception, And callback is null.");
+            }
         }
     }
 
@@ -141,23 +156,5 @@ public abstract class SimpleNetTask<T> extends SimpleTask {
      */
     protected ErrorEntity onResponseError(ResponseEntity responseEntity) {
         return null;
-    }
-
-    /**
-     * 无论回调对象是否为空，只要服务端正确返回结果，该方法都会调用，在子类中实现
-     *
-     * @param responseEntity 请求结果
-     */
-    protected void handlerResponse(ResponseEntity responseEntity) {
-
-    }
-
-    /**
-     * 无论回调对象是否为空，并且服务端返回结果错误的时候调用该方法，在子类中实现
-     *
-     * @param responseEntity 请求结果
-     */
-    protected void handlerError(ResponseEntity responseEntity) {
-
     }
 }
