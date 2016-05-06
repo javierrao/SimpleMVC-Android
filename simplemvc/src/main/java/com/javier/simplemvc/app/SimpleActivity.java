@@ -24,8 +24,8 @@ public abstract class SimpleActivity extends FragmentActivity implements IAppWid
 
         init();
         initView();
-        initCommand();
         addEventListener();
+        initCommand();
         onInitComplete();
     }
 
