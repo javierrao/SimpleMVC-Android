@@ -1,6 +1,7 @@
 package com.javier.simplemvc.modules.task;
 
 import com.javier.simplemvc.SimpleContext;
+import com.javier.simplemvc.core.TaskManager;
 import com.javier.simplemvc.dao.SimpleDatabase;
 import com.javier.simplemvc.interfaces.IDao;
 import com.javier.simplemvc.interfaces.ITaskCallback;

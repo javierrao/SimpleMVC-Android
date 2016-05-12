@@ -2,11 +2,9 @@ package com.javier.simplemvc.modules.task;
 
 import android.os.AsyncTask;
 
-import com.javier.simplemvc.SimpleContext;
 import com.javier.simplemvc.core.TaskManager;
 import com.javier.simplemvc.interfaces.IEncrypt;
 import com.javier.simplemvc.interfaces.ITaskCallback;
-import com.javier.simplemvc.modules.notify.NotifyMessage;
 import com.javier.simplemvc.utils.Logger;
 
 /**
@@ -50,5 +48,12 @@ public abstract class SimpleTask extends AsyncTask {
 
     public void setEncrypt(IEncrypt encrypt) {
         this.encrypt = encrypt;
+    }
+
+    @Override
+    protected void onPostExecute(Object o) {
+        super.onPostExecute(o);
+
+        TaskManager.getInstance().removeTask(getTaskId());
     }
 }
