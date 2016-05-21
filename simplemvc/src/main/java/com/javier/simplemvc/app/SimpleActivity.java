@@ -60,7 +60,7 @@ public abstract class SimpleActivity extends FragmentActivity implements IAppWid
 
         for (String fTag : mFragmentTags) {
             if (tag.equalsIgnoreCase(fTag)) {
-                Fragment attachFragment = getFragment(tag);
+                Fragment attachFragment = loadFragment(tag);
 
                 if (attachFragment == null) {
                     logger.e("can not find fragment by tag : " + tag);
@@ -69,7 +69,7 @@ public abstract class SimpleActivity extends FragmentActivity implements IAppWid
 
                 attachFragment(layoutId, attachFragment, tag);
             } else {
-                Fragment detachFragment = getFragment(fTag);
+                Fragment detachFragment = loadFragment(fTag);
 
                 if (detachFragment == null) {
                     logger.e("can not find fragment by tag : " + fTag);
@@ -133,6 +133,16 @@ public abstract class SimpleActivity extends FragmentActivity implements IAppWid
         if (f != null && !f.isDetached()) {
             mTransaction.detach(f);
         }
+    }
+
+    private Fragment loadFragment(String tag) {
+        Fragment f = mFragmentManager.findFragmentByTag(tag);
+
+        if (f == null) {
+            f = getFragment(tag);
+        }
+
+        return f;
     }
 
     protected void registerCommand(Class commandClass) {

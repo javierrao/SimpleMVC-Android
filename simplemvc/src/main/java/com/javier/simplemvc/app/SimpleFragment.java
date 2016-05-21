@@ -17,8 +17,10 @@ import com.javier.simplemvc.utils.Logger;
  * mail:38244704@qq.com
  */
 @SuppressWarnings("unused")
-public abstract class SimpleFragment extends Fragment implements IAppWidget {
+public abstract class SimpleFragment<A> extends Fragment implements IAppWidget {
     protected Logger logger = Logger.getLogger();
+
+    protected A activity = null;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -50,8 +52,22 @@ public abstract class SimpleFragment extends Fragment implements IAppWidget {
         ModuleManager.getModuleManager().registerModule(commandClass);
     }
 
+    protected A findActivity() {
+        return (A) super.getActivity();
+    }
+
     protected View findViewById(int resId) {
         return getActivity().findViewById(resId);
+    }
+
+    @Override
+    public void onRemove() {
+
+    }
+
+    @Override
+    public void onRegister() {
+
     }
 
     @Override
