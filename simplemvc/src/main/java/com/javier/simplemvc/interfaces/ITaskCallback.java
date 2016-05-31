@@ -1,7 +1,8 @@
 package com.javier.simplemvc.interfaces;
 
-import com.javier.simplemvc.net.ErrorEntity;
-import com.javier.simplemvc.modules.task.SimpleTask;
+
+import com.javier.simplemvc.data.http.ErrorEntity;
+import com.javier.simplemvc.patterns.model.SimpleTask;
 
 /**
  * author:Javier

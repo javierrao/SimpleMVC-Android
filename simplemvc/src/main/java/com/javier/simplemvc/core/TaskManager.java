@@ -3,30 +3,29 @@ package com.javier.simplemvc.core;
 import android.os.AsyncTask;
 import android.util.SparseArray;
 
-import com.javier.simplemvc.dao.SimpleDatabase;
+import com.javier.simplemvc.data.database.SimpleDatabase;
+import com.javier.simplemvc.data.http.RequestEntity;
 import com.javier.simplemvc.interfaces.IEncrypt;
 import com.javier.simplemvc.interfaces.ITaskCallback;
-import com.javier.simplemvc.modules.task.SimpleDatabaseTask;
-import com.javier.simplemvc.modules.task.SimpleTask;
-import com.javier.simplemvc.net.RequestEntity;
-import com.javier.simplemvc.utils.Logger;
+import com.javier.simplemvc.patterns.model.SimpleDatabaseTask;
+import com.javier.simplemvc.patterns.model.SimpleTask;
+import com.javier.simplemvc.util.Logger;
 
 import java.lang.reflect.Constructor;
 
 /**
  * author:Javier
- * time:2016/4/30.
+ * time:2016/5/28.
  * mail:38244704@qq.com
  */
-@SuppressWarnings("unused, unchecked")
-public final class TaskManager {
-    private static final Logger logger = Logger.getLogger();
+@SuppressWarnings("unused")
+public final class TaskManager extends SimpleManager {
 
-    private static TaskManager task;
+    private static TaskManager taskManager;
 
-    private SparseArray<TaskMap> taskSparseArray = new SparseArray<>();
+    private SparseArray<TaskMap> taskSparseArray;
 
-    private SparseArray<SimpleTask> executeTasks = new SparseArray<>();
+    private SparseArray<SimpleTask> executeTasks;
 
     class TaskMap {
         Class taskClass;
@@ -35,10 +34,15 @@ public final class TaskManager {
     }
 
     public synchronized static TaskManager getInstance() {
-        if (task == null)
-            task = new TaskManager();
+        if (taskManager == null)
+            taskManager = new TaskManager();
 
-        return task;
+        return taskManager;
+    }
+
+    public TaskManager() {
+        taskSparseArray = new SparseArray<>();
+        executeTasks = new SparseArray<>();
     }
 
     /**
@@ -74,7 +78,7 @@ public final class TaskManager {
         TaskMap taskMap = taskSparseArray.get(taskId);
 
         if (taskMap.taskClass == null) {
-            logger.e("can not found class by id " + taskId);
+            Logger.getLogger().e("can not found class by id " + taskId);
             return null;
         }
 
@@ -82,10 +86,10 @@ public final class TaskManager {
             Constructor[] cons = taskMap.taskClass.getConstructors();
 
             if (taskMap.encrypt == null) {
-                return (SimpleTask) cons[1].newInstance(taskMap.callback);
+                return (SimpleTask) cons[0].newInstance(taskMap.callback);
             }
 
-            return (SimpleTask) cons[2].newInstance(taskMap.callback, taskMap.encrypt);
+            return (SimpleTask) cons[1].newInstance(taskMap.callback, taskMap.encrypt);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +105,7 @@ public final class TaskManager {
     public void removeTask(int taskId) {
         SimpleTask task = executeTasks.get(taskId);
 
-        if (task != null) {
+        if (task != null && !task.isCancelled()) {
             task.cancel(true);
         }
 
@@ -119,7 +123,7 @@ public final class TaskManager {
             task.cancel(true);
         }
 
-        taskSparseArray.clear();
+        executeTasks.clear();
     }
 
     public void insert(int taskId, Object... param) {
@@ -222,5 +226,16 @@ public final class TaskManager {
         if (task instanceof SimpleDatabaseTask) {
             task.execute(opt, param);
         }
+    }
+
+    @Override
+    public void destroy() {
+        removeAllTask();
+        taskSparseArray.clear();
+
+        taskSparseArray = null;
+        executeTasks = null;
+
+        taskManager = null;
     }
 }

@@ -1,1 +1,1 @@
-include ':app', ':simplemvc'
+include ':app', ':simplemvc', ':simplepay', ':simpleui'

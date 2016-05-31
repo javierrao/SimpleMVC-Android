@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/SimpleMVC-Android.iml" filepath="$PROJECT_DIR$/SimpleMVC-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/simplemvc/simplemvc.iml" filepath="$PROJECT_DIR$/simplemvc/simplemvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simplepay/simplepay.iml" filepath="$PROJECT_DIR$/simplepay/simplepay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simpleui/simpleui.iml" filepath="$PROJECT_DIR$/simpleui/simpleui.iml" />
     </modules>
   </component>
 </project>

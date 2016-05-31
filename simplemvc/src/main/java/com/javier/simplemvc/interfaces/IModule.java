@@ -1,15 +1,15 @@
 package com.javier.simplemvc.interfaces;
 
-import com.javier.simplemvc.modules.notify.NotifyMessage;
+import com.javier.simplemvc.patterns.notify.NotifyMessage;
 
 /**
  * author:Javier
- * time:2016/5/5.
+ * time:2016/5/28.
  * mail:38244704@qq.com
  */
 public interface IModule {
-    int[] listMessage();
     void handlerMessage(NotifyMessage message);
+    String[] listMessage();
     void onRemove();
     void onRegister();
 }

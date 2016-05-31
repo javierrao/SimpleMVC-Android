@@ -36,32 +36,12 @@ public class Fragment2 extends SimpleFragment<DemoActivity> {
     }
 
     @Override
-    public void initCommand() {
-
-    }
-
-    @Override
     public void addEventListener() {
 
     }
 
     @Override
     public void onInitComplete() {
-
-    }
-
-    @Override
-    public void removeCommand() {
-
-    }
-
-    @Override
-    public int[] listMessage() {
-        return new int[0];
-    }
-
-    @Override
-    public void handlerMessage(NotifyMessage message) {
 
     }
 }

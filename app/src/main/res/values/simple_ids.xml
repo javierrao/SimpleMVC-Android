@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ids_dao_user" type="id" />
+    <item name="ids_task_query_user" type="id" />
+    <item name="ids_task_user_login" type="id" />
+</resources>

@@ -1,6 +1,7 @@
 package com.android.javier.demo.command;
 
 import com.android.javier.demo.R;
+import com.android.javier.demo.SimpleConstants;
 import com.android.javier.demo.entities.UserLoginEntity;
 import com.android.javier.demo.tasks.LoginTask;
 import com.android.javier.demo.tasks.UserTask;
@@ -22,22 +23,23 @@ public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLog
     }
 
     @Override
-    public int[] listMessage() {
-        return new int[]{R.integer.msg_commit_login};
+    public String[] listMessage() {
+        return new String[]{SimpleConstants.MSG_COMMIT_LOGIN};
     }
 
     @Override
     public void handlerMessage(NotifyMessage message) {
-        switch (message.getWhat()) {
-            case R.integer.msg_commit_login:
+        switch (message.getName()) {
+            case SimpleConstants.MSG_COMMIT_LOGIN:
                 Object[] objects = message.getParams();
                 String account = String.valueOf(objects[0]);
                 String password = String.valueOf(objects[1]);
-                taskManager.post(R.id.ids_task_user_login,
-                        "https://192.168.0.132/user/login",
-                        "account=" + account + "&password=" + password);
+                logger.i("execute login! " + account + " - " + password);
+//                taskManager.post(R.id.ids_task_user_login,
+//                        "https://192.168.0.132/user/login",
+//                        "account=" + account + "&password=" + password);
 
-                taskManager.query(R.id.ids_task_query_user, "1");
+//                taskManager.query(R.id.ids_task_query_user, "1");
                 break;
         }
     }
@@ -49,6 +51,8 @@ public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLog
 
     @Override
     public void onFailed(int code, ErrorEntity error, SimpleTask target) {
-
+        logger.i("code : "+code);
+        logger.i("error : " + error.getMessage());
+        logger.i("task : " + target);
     }
 }

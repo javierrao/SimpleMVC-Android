@@ -1,5 +1,6 @@
 package com.android.javier.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +20,7 @@ public class DemoActivity extends SimpleActivity {
     public static final String FRAGMENT_2 = "FRAGMENT_2";
     public static final String FRAGMENT_3 = "FRAGMENT_3";
 
-    private Button mLoginButton;
+    private Button mLoginButton, mRemoveButton, mRegisterButton, mMain;
     private RadioGroup mRadioGroup;
 
     @Override
@@ -30,7 +31,10 @@ public class DemoActivity extends SimpleActivity {
 
     @Override
     public void initView() {
-        mLoginButton = (Button) findViewById(R.id.testbtn);
+        mLoginButton = (Button) findViewById(R.id.login);
+        mRemoveButton = (Button) findViewById(R.id.remove);
+        mRegisterButton = (Button) findViewById(R.id.register);
+        mMain = (Button) findViewById(R.id.main);
         mRadioGroup = (RadioGroup) findViewById(R.id.fragment_switch);
     }
 
@@ -39,7 +43,28 @@ public class DemoActivity extends SimpleActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendNotifyMessage(R.integer.msg_commit_login, "13235687640", "123456");
+                sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "13235687640", "123456");
+            }
+        });
+
+        mRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeCommand(LoginCommand.class);
+            }
+        });
+
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRegister();
+            }
+        });
+
+        mMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DemoActivity.this, MainActivity.class));
             }
         });
 
@@ -63,22 +88,21 @@ public class DemoActivity extends SimpleActivity {
 
     @Override
     public void onInitComplete() {
-        switchFragment(FRAGMENT_1, R.id.fragment_container);
+//        switchFragment(FRAGMENT_1, R.id.fragment_container);
     }
 
     @Override
-    public void initCommand() {
+    public void onRegister() {
+        super.onRegister();
+
         registerCommand(LoginCommand.class);
     }
 
     @Override
-    public void removeCommand() {
-        removeCommand(LoginCommand.class);
-    }
+    public void onRemove() {
+        super.onRemove();
 
-    @Override
-    public int[] listMessage() {
-        return new int[0];
+        removeCommand(LoginCommand.class);
     }
 
     @Override
