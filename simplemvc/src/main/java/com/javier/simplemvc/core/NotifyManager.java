@@ -13,11 +13,12 @@ import java.util.HashMap;
  * time:2016/5/29.
  * mail:38244704@qq.com
  */
+@SuppressWarnings("unused")
 public class NotifyManager extends SimpleManager {
 
     private static NotifyManager manager;
 
-    public static NotifyManager getInstance() {
+    public synchronized static NotifyManager getInstance() {
         if (manager == null) {
             manager = new NotifyManager();
         }

@@ -34,7 +34,6 @@ public abstract class SimpleActivity extends FragmentActivity implements IView {
         super.onCreate(savedInstanceState);
 
         simpleContext = SimpleContext.getSimpleContext();
-
         mFragmentManager = getSupportFragmentManager();
         mFragmentTags = getFragmentTags();
     }

@@ -29,6 +29,15 @@ public final class SimpleHttp {
 
     private static String MODE = "UTF-8";
 
+    /**
+     * http连接超时时间
+     */
+    private static final int CONNECT_TIMEOUT = 30000;
+    /**
+     * http读取数据超时时间
+     */
+    private static final int READ_TIMEOUT = 30000;
+
     private HttpURLConnection httpConnection;
     private HttpsURLConnection httpsConnection;
 
@@ -58,6 +67,14 @@ public final class SimpleHttp {
         return httpRequest(url, data, "GET",headers);
     }
 
+    /**
+     * 发送Http请求
+     * @param requestUrl    请求的URL
+     * @param data          请求参数
+     * @param method        请求方法
+     * @param headers       http头
+     * @return
+     */
     private ResponseEntity httpRequest(String requestUrl, String data, String method, Headers headers) {
         try {
             URL url;
@@ -75,6 +92,7 @@ public final class SimpleHttp {
             attachCommonAttribute(httpConnection, headers);
 
             httpConnection.connect();
+
 
             if (method.equalsIgnoreCase("post")) {
                 // 发送数据
@@ -110,6 +128,14 @@ public final class SimpleHttp {
         return createResponseEntity("", "", HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
+    /**
+     * 发送https请求
+     * @param requestUrl    请求的url
+     * @param data          请求参数
+     * @param method        方法
+     * @param headers       http头
+     * @return
+     */
     private ResponseEntity httpsRequest(String requestUrl, String data, String method, Headers headers) {
         try {
             URL url;
@@ -189,8 +215,8 @@ public final class SimpleHttp {
         try {
             URL url = new URL(downUrl);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(10000);
-            connection.setReadTimeout(30000);
+            connection.setConnectTimeout(CONNECT_TIMEOUT);
+            connection.setReadTimeout(READ_TIMEOUT);
             buffer = new BufferedReader(new InputStreamReader(
                     connection.getInputStream()));
 
@@ -226,8 +252,8 @@ public final class SimpleHttp {
         connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setRequestProperty("Charset", MODE);
         connection.setRequestProperty("Authorization", accessToken);
-        connection.setConnectTimeout(30000);
-        connection.setReadTimeout(30000);
+        connection.setConnectTimeout(CONNECT_TIMEOUT);
+        connection.setReadTimeout(READ_TIMEOUT);
 
         if (headers == null) {
             connection.setUseCaches(false);

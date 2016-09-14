@@ -1,13 +1,17 @@
 package com.javier.simplemvc.core;
 
+import android.content.Context;
+
 import com.javier.simplemvc.SimpleContext;
 import com.javier.simplemvc.interfaces.ICommand;
+import com.javier.simplemvc.interfaces.IDao;
 import com.javier.simplemvc.interfaces.IObserverFunction;
 import com.javier.simplemvc.patterns.entity.CommandEntity;
 import com.javier.simplemvc.patterns.notify.NotifyMessage;
 import com.javier.simplemvc.patterns.observer.Observer;
 import com.javier.simplemvc.util.Logger;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,15 +30,19 @@ public final class CommandManager extends SimpleManager {
     // 已创建的command
     private HashMap<String, ICommand> commandHolder;
 
-    public static CommandManager getInstance() {
+    private Context mContext;
+
+    public synchronized static CommandManager getInstance(Context context) {
         if (manager == null) {
-            manager = new CommandManager();
+            manager = new CommandManager(context);
         }
 
         return manager;
     }
 
-    public CommandManager() {
+    public CommandManager(Context context) {
+        this.mContext = context;
+
         commandHashMap = new HashMap<>();
         commandHolder = new HashMap<>();
     }
@@ -68,6 +76,10 @@ public final class CommandManager extends SimpleManager {
         }
     }
 
+    /**
+     * 移除command，移除command以后，此command不在接收消息
+     * @param commandClass  需要移除的command的class
+     */
     public synchronized void removeCommand(Class commandClass) {
         if (commandHashMap.size() == 0) {
             Logger.getLogger().w("command " + commandClass.getName() + " was not register.");
@@ -131,7 +143,12 @@ public final class CommandManager extends SimpleManager {
                         }
 
                         try {
-                            ICommand command = (ICommand) clazz.newInstance();
+//                            ICommand command = (ICommand) clazz.newInstance();
+//                            command.handlerMessage(message);
+
+                            // 调用command的构造方法，并且传入mContext对象
+                            Constructor<?>[] cons = clazz.getConstructors();
+                            ICommand command = (ICommand) cons[0].newInstance(mContext);
                             command.handlerMessage(message);
 
                             if (commandEntity.isHolder()) {

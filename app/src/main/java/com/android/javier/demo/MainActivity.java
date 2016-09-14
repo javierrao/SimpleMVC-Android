@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.android.javier.demo.command.LoginCommand;
-import com.javier.simplemvc.SimpleContext;
-import com.javier.simplemvc.app.SimpleActivity;
+import com.javier.simplemvc.core.NotifyManager;
+import com.javier.simplemvc.patterns.view.SimpleActivity;
 
 /**
  * author:Javier
@@ -25,16 +25,16 @@ public class MainActivity extends SimpleActivity {
     }
 
     @Override
-    public void initView() {
+    public void onInitView() {
         mainLogin = (Button) findViewById(R.id.main_login);
     }
 
     @Override
-    public void addEventListener() {
+    public void onSetEventListener() {
         mainLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "13235687640", "123456");
+                notifyManager.sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "13235687640", "123456");
             }
         });
     }
@@ -42,19 +42,5 @@ public class MainActivity extends SimpleActivity {
     @Override
     public void onInitComplete() {
 
-    }
-
-    @Override
-    public void onRegister() {
-        super.onRegister();
-
-        registerCommand(LoginCommand.class);
-    }
-
-    @Override
-    public void onRemove() {
-        super.onRemove();
-
-        removeCommand(LoginCommand.class);
     }
 }

@@ -22,7 +22,7 @@ public final class ViewManager extends SimpleManager {
 
     private HashMap<IView, String[]> widgetHashMap;
 
-    public static ViewManager getInstance() {
+    public synchronized static ViewManager getInstance() {
         if (manager == null) {
             manager = new ViewManager();
         }

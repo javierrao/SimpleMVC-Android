@@ -18,7 +18,7 @@ public final class ObserverManager extends SimpleManager {
 
     private HashMap<String, ArrayList<Observer>> observerMap;
 
-    public static ObserverManager getInstance() {
+    public synchronized static ObserverManager getInstance() {
         if (manager == null) {
             manager = new ObserverManager();
         }
@@ -32,8 +32,9 @@ public final class ObserverManager extends SimpleManager {
 
     /**
      * 一个消息可以有多个观察者，因此消息与观察者为一对多的关系
-     * @param message       消息
-     * @param observer      观察者
+     *
+     * @param message  消息
+     * @param observer 观察者
      */
     public void registerObserver(String message, Observer observer) {
         if (observerMap.get(message) == null) {

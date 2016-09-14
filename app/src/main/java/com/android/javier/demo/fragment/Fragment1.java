@@ -8,8 +8,7 @@ import android.view.ViewGroup;
 
 import com.android.javier.demo.DemoActivity;
 import com.android.javier.demo.R;
-import com.javier.simplemvc.app.SimpleFragment;
-import com.javier.simplemvc.modules.notify.NotifyMessage;
+import com.javier.simplemvc.patterns.view.SimpleFragment;
 
 /**
  * author:Javier
@@ -32,12 +31,12 @@ public class Fragment1 extends SimpleFragment<DemoActivity> {
     }
 
     @Override
-    public void initView() {
+    public void onInitView() {
 
     }
 
     @Override
-    public void addEventListener() {
+    public void onSetEventListener() {
 
     }
 

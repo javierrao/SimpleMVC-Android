@@ -21,10 +21,11 @@ import java.lang.reflect.Constructor;
 @SuppressWarnings("unused")
 public final class TaskManager extends SimpleManager {
 
+    private static final int EXECUTOR_COUNT = 5;
+
     private static TaskManager taskManager;
 
     private SparseArray<TaskMap> taskSparseArray;
-
     private SparseArray<SimpleTask> executeTasks;
 
     class TaskMap {
@@ -214,6 +215,9 @@ public final class TaskManager extends SimpleManager {
         requestEntity.setProtocol(protocol);
         requestEntity.setEncrypt(encoder_int);
         requestEntity.setTokenId(tokenId);
+
+//        ExecutorService executorService = Executors.newFixedThreadPool(EXECUTOR_COUNT);
+//        task.executeOnExecutor(executorService, requestEntity);
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, requestEntity);
 

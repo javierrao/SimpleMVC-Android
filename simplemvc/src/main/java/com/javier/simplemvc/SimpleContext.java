@@ -31,23 +31,20 @@ public final class SimpleContext {
 
     private Context context;
 
-    public static SimpleContext getSimpleContext() {
+    public static SimpleContext getSimpleContext(Context context) {
         if (simpleContext == null) {
-            simpleContext = new SimpleContext();
+            simpleContext = new SimpleContext(context);
         }
 
         return simpleContext;
     }
 
-    public SimpleContext() {
-        commandManager = CommandManager.getInstance();
+    public SimpleContext(Context context) {
+        this.context = context;
+        commandManager = CommandManager.getInstance(context);
         viewManager = ViewManager.getInstance();
         observerManager = ObserverManager.getInstance();
         daoManager = DaoManager.getInstance();
-    }
-
-    public void init(Context context) {
-        this.context = context;
     }
 
     public void initDatabase(String dbName, int version, ArrayList<DaoEntity> daoEntities) {

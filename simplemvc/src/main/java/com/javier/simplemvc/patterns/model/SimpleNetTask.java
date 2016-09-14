@@ -15,7 +15,7 @@ import java.net.HttpURLConnection;
  * time:2016/4/30.
  * mail:38244704@qq.com
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked,unused")
 public abstract class SimpleNetTask<T> extends SimpleTask {
 
     protected SimpleHttp httpSvr;

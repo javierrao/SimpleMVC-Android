@@ -1,25 +1,42 @@
 package com.android.javier.demo.command;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.android.javier.demo.R;
 import com.android.javier.demo.SimpleConstants;
 import com.android.javier.demo.entities.UserLoginEntity;
 import com.android.javier.demo.tasks.LoginTask;
 import com.android.javier.demo.tasks.UserTask;
+import com.javier.simplemvc.data.http.ErrorEntity;
 import com.javier.simplemvc.interfaces.ITaskCallback;
-import com.javier.simplemvc.modules.command.SimpleCommand;
-import com.javier.simplemvc.modules.notify.NotifyMessage;
-import com.javier.simplemvc.modules.task.SimpleTask;
-import com.javier.simplemvc.net.ErrorEntity;
+import com.javier.simplemvc.patterns.command.SimpleCommand;
+import com.javier.simplemvc.patterns.model.SimpleTask;
+import com.javier.simplemvc.patterns.notify.NotifyMessage;
 
 /**
  * Created by javier
  */
 public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLoginEntity> {
 
+    public LoginCommand(Context context) {
+        super(context);
+    }
+
     @Override
-    public void initTask() {
-        registerTask(R.id.ids_task_user_login, LoginTask.class, this);
+    public void onRegister() {
+        super.onRegister();
+
         registerTask(R.id.ids_task_query_user, UserTask.class, this);
+        registerTask(R.id.ids_task_user_login, LoginTask.class, this);
+    }
+
+    @Override
+    public void onRemove() {
+        super.onRemove();
+
+        removeTask(R.id.ids_task_query_user);
+        removeTask(R.id.ids_task_user_login);
     }
 
     @Override
@@ -39,19 +56,18 @@ public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLog
 //                        "https://192.168.0.132/user/login",
 //                        "account=" + account + "&password=" + password);
 
-//                taskManager.query(R.id.ids_task_query_user, "1");
+                taskManager.query(R.id.ids_task_query_user, "1");
                 break;
         }
     }
 
     @Override
     public void onResult(int code, UserLoginEntity result, SimpleTask target) {
-
     }
 
     @Override
     public void onFailed(int code, ErrorEntity error, SimpleTask target) {
-        logger.i("code : "+code);
+        logger.i("code : " + code);
         logger.i("error : " + error.getMessage());
         logger.i("task : " + target);
     }

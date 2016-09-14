@@ -2,7 +2,7 @@ package com.android.javier.demo.tasks;
 
 import com.android.javier.demo.entities.UserLoginEntity;
 import com.javier.simplemvc.interfaces.ITaskCallback;
-import com.javier.simplemvc.modules.task.SimpleDatabaseTask;
+import com.javier.simplemvc.patterns.model.SimpleDatabaseTask;
 
 /**
  * author:Javier
@@ -24,7 +24,6 @@ public class UserTask extends SimpleDatabaseTask<UserLoginEntity> {
         if (userLoginEntity != null) {
             onResult(200, userLoginEntity);
         } else {
-
             onFailed(201, "读取用户信息失败");
         }
     }

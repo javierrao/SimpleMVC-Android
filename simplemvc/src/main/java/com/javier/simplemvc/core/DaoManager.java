@@ -21,7 +21,7 @@ public final class DaoManager extends SimpleManager {
 
     private ArrayList<DaoEntity> registerDaoEntities ;
 
-    public static DaoManager getInstance() {
+    public synchronized static DaoManager getInstance() {
         if (manager == null) {
             manager = new DaoManager();
         }

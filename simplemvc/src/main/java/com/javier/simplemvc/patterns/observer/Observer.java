@@ -7,7 +7,7 @@ import com.javier.simplemvc.patterns.notify.NotifyMessage;
  * author:Javier
  * time:2016/4/30.
  * mail:38244704@qq.com
- *
+ * <p/>
  * 一个消息会被多个观察者所关注
  */
 public final class Observer {

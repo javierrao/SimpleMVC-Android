@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.javier.demo.entities.UserLoginEntity;
-import com.javier.simplemvc.database.SimpleDao;
+import com.javier.simplemvc.patterns.model.SimpleDao;
 
 /**
  * Created by javier

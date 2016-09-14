@@ -1,11 +1,10 @@
 package com.android.javier.demo.tasks;
 
-import com.android.javier.demo.R;
 import com.android.javier.demo.entities.UserLoginEntity;
+import com.javier.simplemvc.data.http.ErrorEntity;
+import com.javier.simplemvc.data.http.ResponseEntity;
 import com.javier.simplemvc.interfaces.ITaskCallback;
-import com.javier.simplemvc.modules.task.SimpleNetTask;
-import com.javier.simplemvc.net.ErrorEntity;
-import com.javier.simplemvc.net.ResponseEntity;
+import com.javier.simplemvc.patterns.model.SimpleNetTask;
 
 import org.json.JSONObject;
 
@@ -31,11 +30,11 @@ public class LoginTask extends SimpleNetTask<UserLoginEntity> {
             e.printStackTrace();
         }
 
-        return super.onResponse(responseEntity);
+        return null;
     }
 
     @Override
     protected ErrorEntity onResponseError(ResponseEntity responseEntity) {
-        return super.onResponseError(responseEntity);
+        return null;
     }
 }

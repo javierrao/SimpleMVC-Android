@@ -1,5 +1,7 @@
 package com.javier.simplemvc.patterns.command;
 
+import android.content.Context;
+
 import com.javier.simplemvc.SimpleContext;
 import com.javier.simplemvc.core.NotifyManager;
 import com.javier.simplemvc.core.TaskManager;
@@ -22,6 +24,11 @@ public abstract class SimpleCommand implements ICommand {
     protected SimpleContext simpleContext = SimpleContext.getSimpleContext();
     protected TaskManager taskManager = TaskManager.getInstance();
     protected NotifyManager notifyManager = NotifyManager.getInstance();
+    protected Context mContext;
+
+    protected SimpleCommand(Context context) {
+        this.mContext = context;
+    }
 
     /**
      * 注册task,并且在数据发送和接收的时候需要通过调用加密接口进行加解密

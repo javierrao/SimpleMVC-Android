@@ -19,12 +19,10 @@ public abstract class SimpleApplication extends Application {
      * 启动SimpleMVC框架
      */
     protected void startUpSimpleMVC() {
-        simpleContext = SimpleContext.getSimpleContext();
-        simpleContext.init(getApplicationContext());
-
-        initLogger();
+        simpleContext = SimpleContext.getSimpleContext(getApplicationContext());
 
         ArrayList<CommandEntity> commandEntities = listCommand();
+
         if (commandEntities != null && commandEntities.size() > 0) {
             simpleContext.registerCommand(listCommand());
         }
@@ -32,8 +30,9 @@ public abstract class SimpleApplication extends Application {
 
     /**
      * 初始化数据库
-     * @param dbName    数据库名称
-     * @param version   数据库版本
+     *
+     * @param dbName  数据库名称
+     * @param version 数据库版本
      */
     protected void initDatabase(String dbName, int version) {
         ArrayList<DaoEntity> daoEntities = listDao();
@@ -44,18 +43,15 @@ public abstract class SimpleApplication extends Application {
     }
 
     /**
-     * 初始化日志
-     */
-    protected abstract void initLogger();
-
-    /**
      * 需要注册的DAO CLASS对象集合
+     *
      * @return
      */
     protected abstract ArrayList<DaoEntity> listDao();
 
     /**
      * 需要注册的command的class数组
+     *
      * @return
      */
     protected abstract ArrayList<CommandEntity> listCommand();
