@@ -53,7 +53,7 @@ public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLog
 
                 bindTask(1, this);
                 taskManager.post(1, "http://192.168.100.4:8080/lotteryhome/api/user/login",
-                        "account=" + account + "&password=" + password);
+                        "account=" + account + "&password=" + password, this);
                 break;
         }
     }

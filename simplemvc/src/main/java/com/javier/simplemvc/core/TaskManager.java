@@ -98,13 +98,14 @@ public final class TaskManager extends SimpleManager {
         }
 
         try {
-            Constructor[] cons = taskMap.taskClass.getConstructors();
+            return (SimpleTask) taskMap.taskClass.newInstance();
+            /*Constructor[] cons = taskMap.taskClass.getConstructors();
 
             if (taskMap.encrypt == null) {
                 return (SimpleTask) cons[0].newInstance(taskMap.callback);
             }
 
-            return (SimpleTask) cons[1].newInstance(taskMap.callback, taskMap.encrypt);
+            return (SimpleTask) cons[1].newInstance(taskMap.callback, taskMap.encrypt);*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,6 +123,8 @@ public final class TaskManager extends SimpleManager {
 
         if (task != null && !task.isCancelled()) {
             task.cancel(true);
+            task.setEncrypt(null);
+            task.setCallback(null);
         }
 
         executeTasks.delete(taskId);
@@ -136,6 +139,8 @@ public final class TaskManager extends SimpleManager {
 
             SimpleTask task = executeTasks.get(key);
             task.cancel(true);
+            task.setEncrypt(null);
+            task.setCallback(null);
         }
 
         executeTasks.clear();
@@ -157,39 +162,39 @@ public final class TaskManager extends SimpleManager {
         execDatabase(taskId, SimpleDatabase.SELECT, param);
     }
 
-    public void post(int taskId, String url, String param) {
-        execHttp(taskId, url, "POST", param, false, "");
+    public void post(int taskId, String url, String param, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, false, "", null, callback);
     }
 
-    public void postWithToken(int taskId, String url, String param, String tokenId) {
-        execHttp(taskId, url, "POST", param, false, tokenId);
+    public void postWithToken(int taskId, String url, String param, String tokenId, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, false, tokenId, null, callback);
     }
 
-    public void postEncrypt(int taskId, String url, String param) {
-        execHttp(taskId, url, "POST", param, true, "");
+    public void postEncrypt(int taskId, String url, String param, IEncrypt encrypt, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, true, "", encrypt, callback);
     }
 
-    public void postEncryptToken(int taskId, String url, String param, String tokenId) {
-        execHttp(taskId, url, "POST", param, true, tokenId);
+    public void postEncryptToken(int taskId, String url, String param, String tokenId, IEncrypt encrypt, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, true, tokenId, encrypt, callback);
     }
 
-    public void get(int taskId, String url, String param) {
-        execHttp(taskId, url, "POST", param, false, "");
+    public void get(int taskId, String url, String param, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, false, "", null, callback);
     }
 
-    public void getWithToken(int taskId, String url, String param, String tokenId) {
-        execHttp(taskId, url, "POST", param, false, tokenId);
+    public void getWithToken(int taskId, String url, String param, String tokenId, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, false, tokenId, null, callback);
     }
 
-    public void getEncrypt(int taskId, String url, String param) {
-        execHttp(taskId, url, "POST", param, true, "");
+    public void getEncrypt(int taskId, String url, String param, IEncrypt encrypt, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, true, "", encrypt, callback);
     }
 
-    public void getEncryptToken(int taskId, String url, String param, String tokenId) {
-        execHttp(taskId, url, "POST", param, true, tokenId);
+    public void getEncryptToken(int taskId, String url, String param, String tokenId, IEncrypt encrypt, ITaskCallback callback) {
+        execHttp(taskId, url, "POST", param, true, tokenId, encrypt, callback);
     }
 
-    private void execHttp(int taskId, String url, String method, String param, boolean encrypt, String tokenId) {
+    private void execHttp(int taskId, String url, String method, String param, boolean encrypt, String tokenId, IEncrypt encryptObject, ITaskCallback callback) {
         String protocol = "http";
 
         if (url.startsWith("https")) {
@@ -197,6 +202,8 @@ public final class TaskManager extends SimpleManager {
         }
 
         SimpleTask task = retrieveTask(taskId);
+        task.setCallback(callback);
+        task.setEncrypt(encryptObject);
 
         executeHttpTask(task, url, method, protocol, encrypt, param, tokenId);
     }

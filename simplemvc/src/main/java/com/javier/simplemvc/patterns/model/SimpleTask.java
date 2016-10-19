@@ -22,6 +22,10 @@ public abstract class SimpleTask extends AsyncTask {
     protected SimpleContext simpleContext;
     protected Logger logger;
 
+    protected SimpleTask() {
+        this(null);
+    }
+
     protected SimpleTask(ITaskCallback callback) {
         this(callback, null);
     }
@@ -52,6 +56,14 @@ public abstract class SimpleTask extends AsyncTask {
 
     public void setEncrypt(IEncrypt encrypt) {
         this.encrypt = encrypt;
+    }
+
+    public ITaskCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(ITaskCallback callback) {
+        this.callback = callback;
     }
 
     @Override
