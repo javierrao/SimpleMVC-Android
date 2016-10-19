@@ -5,6 +5,8 @@ import android.util.SparseArray;
 
 import com.android.javier.demo.command.LoginCommand;
 import com.android.javier.demo.dao.UserDao;
+import com.android.javier.demo.tasks.LoginTask;
+import com.android.javier.demo.tasks.UserTask;
 import com.javier.simplemvc.SimpleApplication;
 import com.javier.simplemvc.interfaces.ITask;
 import com.javier.simplemvc.patterns.entity.CommandEntity;
@@ -45,5 +47,12 @@ public class BaseApplication extends SimpleApplication {
 
     protected void initLogger() {
         Logger.initLogger("simplemvc", "SimpleMVC-Android", "SimpleMVC-Android.log", true, false);
+    }
+
+    @Override
+    protected SparseArray<Class> listTask() {
+        SparseArray<Class> tasks = new SparseArray<>();
+        tasks.put(1, LoginTask.class);
+        return tasks;
     }
 }

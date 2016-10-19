@@ -14,6 +14,9 @@ import com.javier.simplemvc.util.Logger;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * author:Javier
@@ -59,14 +62,15 @@ public final class CommandManager extends SimpleManager {
             }
 
             try {
-                ICommand iCommand = (ICommand) clazz.newInstance();
+                Constructor[] constructors = clazz.getConstructors();
+                ICommand iCommand = (ICommand) constructors[0].newInstance(mContext);
                 String[] followMessage = iCommand.listMessage();
 
                 commandHashMap.put(commandEntity, followMessage);
 
                 for (String aFollowMessage : followMessage) {
                     // 注册观察者
-                    SimpleContext.getSimpleContext().registerObserver(aFollowMessage, observer);
+                    SimpleContext.getSimpleContext(mContext).registerObserver(aFollowMessage, observer);
                 }
 
                 iCommand.onRegister();
@@ -86,7 +90,20 @@ public final class CommandManager extends SimpleManager {
             return;
         }
 
-        String[] s = commandHashMap.get(commandClass);
+        Iterator iterator = commandHashMap.keySet().iterator();
+        CommandEntity keyEntity = null;
+
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            CommandEntity key = (CommandEntity) entry.getKey();
+
+            if (key.getCommandClass() == commandClass) {
+                keyEntity = key;
+                break;
+            }
+        }
+
+        String[] s = commandHashMap.get(keyEntity);
 
         Class removedClass = null;
 

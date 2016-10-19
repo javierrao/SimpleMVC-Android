@@ -69,6 +69,20 @@ public final class TaskManager extends SimpleManager {
         taskSparseArray.put(taskId, taskMap);
     }
 
+    public SimpleTask bindTask(int taskId, ITaskCallback callback, IEncrypt encrypt) {
+        TaskMap taskMap = taskSparseArray.get(taskId);
+        taskMap.encrypt = encrypt;
+        taskMap.callback = callback;
+
+        return retrieveTask(taskId);
+    }
+
+    public void unBindTask(int taskId) {
+        TaskMap taskMap = taskSparseArray.get(taskId);
+        taskMap.encrypt = null;
+        taskMap.callback = null;
+    }
+
     /**
      * 检索task
      *

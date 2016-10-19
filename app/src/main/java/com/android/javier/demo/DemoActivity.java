@@ -6,13 +6,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
-import com.android.javier.demo.command.LoginCommand;
 import com.android.javier.demo.fragment.Fragment1;
 import com.android.javier.demo.fragment.Fragment2;
 import com.android.javier.demo.fragment.Fragment3;
-import com.javier.simplemvc.app.SimpleActivity;
-import com.javier.simplemvc.app.SimpleFragment;
-import com.javier.simplemvc.modules.notify.NotifyMessage;
+import com.javier.simplemvc.patterns.notify.NotifyMessage;
+import com.javier.simplemvc.patterns.view.SimpleActivity;
+import com.javier.simplemvc.patterns.view.SimpleFragment;
 
 public class DemoActivity extends SimpleActivity {
 
@@ -30,7 +29,7 @@ public class DemoActivity extends SimpleActivity {
     }
 
     @Override
-    public void initView() {
+    public void onInitView() {
         mLoginButton = (Button) findViewById(R.id.login);
         mRemoveButton = (Button) findViewById(R.id.remove);
         mRegisterButton = (Button) findViewById(R.id.register);
@@ -39,18 +38,17 @@ public class DemoActivity extends SimpleActivity {
     }
 
     @Override
-    public void addEventListener() {
+    public void onSetEventListener() {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "13235687640", "123456");
+                notifyManager.sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "15815595810", "000000");
             }
         });
 
         mRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeCommand(LoginCommand.class);
             }
         });
 
@@ -89,20 +87,6 @@ public class DemoActivity extends SimpleActivity {
     @Override
     public void onInitComplete() {
 //        switchFragment(FRAGMENT_1, R.id.fragment_container);
-    }
-
-    @Override
-    public void onRegister() {
-        super.onRegister();
-
-        registerCommand(LoginCommand.class);
-    }
-
-    @Override
-    public void onRemove() {
-        super.onRemove();
-
-        removeCommand(LoginCommand.class);
     }
 
     @Override

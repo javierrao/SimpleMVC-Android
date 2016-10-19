@@ -1,6 +1,7 @@
 package com.javier.simplemvc;
 
 import android.app.Application;
+import android.util.SparseArray;
 
 import com.javier.simplemvc.patterns.entity.CommandEntity;
 import com.javier.simplemvc.patterns.entity.DaoEntity;
@@ -22,9 +23,14 @@ public abstract class SimpleApplication extends Application {
         simpleContext = SimpleContext.getSimpleContext(getApplicationContext());
 
         ArrayList<CommandEntity> commandEntities = listCommand();
+        SparseArray<Class> taskClasses = listTask();
 
         if (commandEntities != null && commandEntities.size() > 0) {
             simpleContext.registerCommand(listCommand());
+        }
+
+        if (taskClasses != null && taskClasses.size() > 0) {
+            simpleContext.registerTask(taskClasses);
         }
     }
 
@@ -55,6 +61,12 @@ public abstract class SimpleApplication extends Application {
      * @return
      */
     protected abstract ArrayList<CommandEntity> listCommand();
+
+    /**
+     * 需要注册的task
+     * @return
+     */
+    protected abstract SparseArray<Class> listTask();
 
     @Override
     public void onTerminate() {

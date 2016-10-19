@@ -19,7 +19,7 @@ public final class Observer {
     }
 
     public void notifyObserver(NotifyMessage message) {
-        getMessageFunction().ObserverFunction(message);
+        messageFunction.ObserverFunction(message);
     }
 
     public IObserverFunction getMessageFunction() {

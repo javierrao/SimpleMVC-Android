@@ -1,10 +1,12 @@
 package com.javier.simplemvc;
 
 import android.content.Context;
+import android.util.SparseArray;
 
 import com.javier.simplemvc.core.CommandManager;
 import com.javier.simplemvc.core.DaoManager;
 import com.javier.simplemvc.core.ObserverManager;
+import com.javier.simplemvc.core.TaskManager;
 import com.javier.simplemvc.core.ViewManager;
 import com.javier.simplemvc.data.database.SimpleDatabase;
 import com.javier.simplemvc.interfaces.IDao;
@@ -25,6 +27,7 @@ public final class SimpleContext {
     private static SimpleContext simpleContext;
 
     private CommandManager commandManager;
+    private TaskManager taskManager;
     private ViewManager viewManager;
     private ObserverManager observerManager;
     private DaoManager daoManager;
@@ -39,9 +42,14 @@ public final class SimpleContext {
         return simpleContext;
     }
 
+    public static SimpleContext getSimpleContext() {
+        return simpleContext;
+    }
+
     public SimpleContext(Context context) {
         this.context = context;
         commandManager = CommandManager.getInstance(context);
+        taskManager = TaskManager.getInstance();
         viewManager = ViewManager.getInstance();
         observerManager = ObserverManager.getInstance();
         daoManager = DaoManager.getInstance();
@@ -56,6 +64,15 @@ public final class SimpleContext {
         commandManager.registerCommand(commandClasses);
     }
 
+    public void registerTask(SparseArray<Class> tasks) {
+        for (int i=0; i<tasks.size(); i++) {
+            int key = tasks.keyAt(i);
+            Class value = tasks.get(key);
+
+            taskManager.registerTask(key, value, null);
+        }
+    }
+
     public void registerView(IView view) {
         viewManager.registerView(view);
     }
@@ -67,8 +84,8 @@ public final class SimpleContext {
     public void destroy() {
         commandManager.destroy();
         viewManager.destroy();
-        observerManager.destroy();
         daoManager.destroy();
+        observerManager.destroy();
     }
 
     public void registerDao(ArrayList<DaoEntity> daoArray) {

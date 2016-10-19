@@ -14,6 +14,8 @@ import com.javier.simplemvc.patterns.command.SimpleCommand;
 import com.javier.simplemvc.patterns.model.SimpleTask;
 import com.javier.simplemvc.patterns.notify.NotifyMessage;
 
+import java.util.HashMap;
+
 /**
  * Created by javier
  */
@@ -26,17 +28,13 @@ public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLog
     @Override
     public void onRegister() {
         super.onRegister();
-
-        registerTask(R.id.ids_task_query_user, UserTask.class, this);
-        registerTask(R.id.ids_task_user_login, LoginTask.class, this);
     }
 
     @Override
     public void onRemove() {
         super.onRemove();
 
-        removeTask(R.id.ids_task_query_user);
-        removeTask(R.id.ids_task_user_login);
+        unBindTask(1);
     }
 
     @Override
@@ -52,17 +50,20 @@ public class LoginCommand extends SimpleCommand implements ITaskCallback<UserLog
                 String account = String.valueOf(objects[0]);
                 String password = String.valueOf(objects[1]);
                 logger.i("execute login! " + account + " - " + password);
-//                taskManager.post(R.id.ids_task_user_login,
-//                        "https://192.168.0.132/user/login",
-//                        "account=" + account + "&password=" + password);
 
-                taskManager.query(R.id.ids_task_query_user, "1");
+                bindTask(1, this);
+                taskManager.post(1, "http://192.168.100.4:8080/lotteryhome/api/user/login",
+                        "account=" + account + "&password=" + password);
                 break;
         }
     }
 
     @Override
     public void onResult(int code, UserLoginEntity result, SimpleTask target) {
+        HashMap map = new HashMap();
+        map.put("code", 200);
+
+        notifyManager.sendNotifyMessage("login_result", map);
     }
 
     @Override

@@ -30,27 +30,16 @@ public abstract class SimpleCommand implements ICommand {
         this.mContext = context;
     }
 
-    /**
-     * 注册task,并且在数据发送和接收的时候需要通过调用加密接口进行加解密
-     *
-     * @param taskId    task id
-     * @param taskClass task class
-     * @param callback  回调接口对象
-     * @param encrypt   加密接口对象
-     */
-    protected void registerTask(int taskId, Class<?> taskClass, ITaskCallback callback, IEncrypt encrypt) {
-        taskManager.registerTask(taskId, taskClass, callback, encrypt);
+    protected SimpleTask bindTask(int taskId, ITaskCallback callback, IEncrypt encrypt) {
+        return taskManager.bindTask(taskId, callback, encrypt);
     }
 
-    /**
-     * 注册task
-     *
-     * @param taskId    task id
-     * @param taskClass task class对象
-     * @param callback  回调接口对象
-     */
-    protected void registerTask(int taskId, Class<?> taskClass, ITaskCallback callback) {
-        taskManager.registerTask(taskId, taskClass, callback);
+    protected SimpleTask bindTask(int taskId, ITaskCallback callback) {
+        return taskManager.bindTask(taskId, callback, null);
+    }
+
+    protected void unBindTask(int taskId) {
+        taskManager.unBindTask(taskId);
     }
 
     /**

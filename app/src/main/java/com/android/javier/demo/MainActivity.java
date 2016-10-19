@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.android.javier.demo.command.LoginCommand;
-import com.javier.simplemvc.core.NotifyManager;
+import com.javier.simplemvc.patterns.notify.NotifyMessage;
 import com.javier.simplemvc.patterns.view.SimpleActivity;
+
+import java.util.HashMap;
 
 /**
  * author:Javier
@@ -34,7 +36,7 @@ public class MainActivity extends SimpleActivity {
         mainLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notifyManager.sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "13235687640", "123456");
+                notifyManager.sendNotifyMessage(SimpleConstants.MSG_COMMIT_LOGIN, "15815595810", "888888");
             }
         });
     }
@@ -42,5 +44,28 @@ public class MainActivity extends SimpleActivity {
     @Override
     public void onInitComplete() {
 
+    }
+
+    @Override
+    public String[] listMessage() {
+        return new String[]{
+                "login_result"
+        };
+    }
+
+    @Override
+    public void handlerMessage(NotifyMessage message) {
+        super.handlerMessage(message);
+
+        switch (message.getName()) {
+            case "login_result":
+                HashMap m = message.getMap();
+                int code = (int) m.get("code");
+
+                if (code == 200) {
+                    Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }
